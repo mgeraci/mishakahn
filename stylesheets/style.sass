@@ -1,2 +1,43 @@
+@import reset
+@import variables
+
+*
+  -webkit-box-sizing: border-boz
+  -moz-box-sizing: border-boz
+  box-sizing: border-box
+
 body
   background: pink
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif
+  font-size: 16px
+
+a
+  color: gray
+  text-decoration: none
+
+  &:hover
+    color: black
+
+h1, h2, h3, h4
+  font-weight: bold
+
+h1
+  font-size: 24px
+  margin-bottom: $gutter
+
+h2
+  font-size: 20px
+
+h3
+  font-size: 18px
+
+#home
+  +stack
+  padding: $gutter
+  background: $white
+
+  ul, li
+    +stackwide
+
+  li
+    margin-top: $gutter / 3
