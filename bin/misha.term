@@ -13,5 +13,10 @@ end
 
 tab do
   run "cd ~/Web/mishakahn"
+  run "coffee -w -c javascripts"
+end
+
+tab do
+  run "cd ~/Web/mishakahn"
   run "vim ."
 end

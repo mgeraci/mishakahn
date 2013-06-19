@@ -1,6 +1,7 @@
 $white: #fff
 
 $gutter: 24px
+$duration: 1s
 
 =stack
   float: left
@@ -9,3 +10,13 @@ $gutter: 24px
 =stackwide
   +stack
   width: 100%
+
+=transition($args)
+  -webkit-transition: $args
+  -moz-transition: $args
+  transition: $args
+
+=transform($args)
+  -webkit-transform: $args
+  -moz-transform: $args
+  transform: $args
