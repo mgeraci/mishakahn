@@ -17,23 +17,34 @@
 
   homeLinks = function() {
     return $("body").on("click", "#home ul a", function(e) {
+      var home_center_x, home_center_y;
       e.preventDefault();
       $("#home .return-home").show();
-      return $("#home").addClass("animating zoomed-out").removeAnimation();
+      home_center_x = ($("#stage").width() - $("#home").outerWidth()) / 2 * -1;
+      home_center_y = ($("#stage").height() - $("#home").outerHeight()) / 2 * -1;
+      home_center_x = "" + (home_center_x / 2) + "px";
+      home_center_y = "" + (home_center_y / 2) + "px";
+      console.log(home_center_y);
+      console.log(home_center_x);
+      return $("#stage").addClass("zoomed-out");
     });
   };
 
   backHome = function() {
     return $("body").on("click", ".return-home", function(e) {
       $("#home .return-home").hide();
-      return $("#home").addClass("animating").removeClass("zoomed-out").removeAnimation();
+      return $("#stage").removeClass("zoomed-out");
     });
   };
 
-  jQuery.fn.removeAnimation = function() {
-    return setTimeout(function() {
-      return $(this).removeClass("animating");
-    }, duration);
+  jQuery.fn.transformOrigin = function(x, y) {
+    return $(this).css({
+      "-webkit-transform-origin": "" + x + " " + y,
+      "-moz-transform-origin": "" + x + " " + y,
+      "-ms-transform-origin": "" + x + " " + y,
+      "-o-transform-origin": "" + x + " " + y,
+      "transform-origin": "" + x + " " + y
+    });
   };
 
 }).call(this);

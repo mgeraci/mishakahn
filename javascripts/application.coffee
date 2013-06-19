@@ -15,18 +15,29 @@ homeLinks = ->
     e.preventDefault()
 
     $("#home .return-home").show() # block action on the home page
-    $("#home")
-      .addClass("animating zoomed-out")
-      .removeAnimation()
+
+    # determing the center coords of #home
+    home_center_x = ($("#stage").width() - $("#home").outerWidth()) / 2 * -1
+    home_center_y = ($("#stage").height() - $("#home").outerHeight()) / 2 * -1
+    home_center_x = "#{home_center_x / 2}px"
+    home_center_y = "#{home_center_y / 2}px"
+
+    # should be top: -2780px, left: -2390px
+    console.log home_center_y
+    console.log home_center_x
+    #.transformOrigin(home_center_x, home_center_y)
+
+    $("#stage").addClass "zoomed-out"
 
 backHome = ->
   $("body").on "click", ".return-home", (e)->
     $("#home .return-home").hide()
-    $("#home")
-      .addClass("animating").removeClass("zoomed-out")
-      .removeAnimation()
+    $("#stage").removeClass "zoomed-out"
 
-jQuery.fn.removeAnimation = ->
-  setTimeout ->
-    $(this).removeClass "animating"
-  , duration
+jQuery.fn.transformOrigin = (x, y) ->
+  $(this).css
+    "-webkit-transform-origin": "#{x} #{y}"
+    "-moz-transform-origin": "#{x} #{y}"
+    "-ms-transform-origin": "#{x} #{y}"
+    "-o-transform-origin": "#{x} #{y}"
+    "transform-origin": "#{x} #{y}"
