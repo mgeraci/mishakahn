@@ -1,0 +1,17 @@
+# COMMENT OF SCRIPT HERE
+# you can make as many tabs as you wish...
+# tab names are actually arbitrary at this point too.
+
+tab do
+  run "cd ~/Web/mishakahn"
+end
+
+tab do
+  run "cd ~/Web/mishakahn"
+  run "sass --watch stylesheets:stylesheets --style compressed"
+end
+
+tab do
+  run "cd ~/Web/mishakahn"
+  run "vim ."
+end
