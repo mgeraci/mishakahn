@@ -16,16 +16,13 @@
   };
 
   homeLinks = function() {
+    var homeCoords;
+    homeCoords = $("#home").centerCoords();
+    $("#stage").transformOrigin(homeCoords.left, homeCoords.top);
     return $("body").on("click", "#home ul a", function(e) {
-      var home_center_x, home_center_y;
       e.preventDefault();
       $("#home .return-home").show();
-      home_center_x = ($("#stage").width() - $("#home").outerWidth()) / 2 * -1;
-      home_center_y = ($("#stage").height() - $("#home").outerHeight()) / 2 * -1;
-      home_center_x = "" + (home_center_x / 2) + "px";
-      home_center_y = "" + (home_center_y / 2) + "px";
-      console.log(home_center_y);
-      console.log(home_center_x);
+      homeCoords = $("#home").centerCoords();
       return $("#stage").addClass("zoomed-out");
     });
   };
@@ -38,13 +35,29 @@
   };
 
   jQuery.fn.transformOrigin = function(x, y) {
+    var str;
+    str = "" + x + "px " + y + "px";
+    str = "" + x + "% " + y + "%";
     return $(this).css({
-      "-webkit-transform-origin": "" + x + " " + y,
-      "-moz-transform-origin": "" + x + " " + y,
-      "-ms-transform-origin": "" + x + " " + y,
-      "-o-transform-origin": "" + x + " " + y,
-      "transform-origin": "" + x + " " + y
+      "-webkit-transform-origin": "" + str,
+      "-moz-transform-origin": "" + str,
+      "-ms-transform-origin": "" + str,
+      "-o-transform-origin": "" + str,
+      "transform-origin": "" + str
     });
+  };
+
+  jQuery.fn.centerCoords = function() {
+    var left, pos, top;
+    pos = $(this).position();
+    top = $(this).outerHeight() / 2 + pos.top;
+    left = $(this).outerWidth() / 2 + pos.left;
+    top = (top * 100) / $("#stage").height();
+    left = (left * 100) / $("#stage").width();
+    return {
+      top: top,
+      left: left
+    };
   };
 
 }).call(this);

@@ -11,23 +11,18 @@ sizeHome = ->
   $("#home").outerHeight $(window).height()
 
 homeLinks = ->
+  homeCoords = $("#home").centerCoords()
+  $("#stage").transformOrigin(homeCoords.left, homeCoords.top)
+
   $("body").on "click", "#home ul a", (e)->
     e.preventDefault()
 
     $("#home .return-home").show() # block action on the home page
 
-    # determing the center coords of #home
-    home_center_x = ($("#stage").width() - $("#home").outerWidth()) / 2 * -1
-    home_center_y = ($("#stage").height() - $("#home").outerHeight()) / 2 * -1
-    home_center_x = "#{home_center_x / 2}px"
-    home_center_y = "#{home_center_y / 2}px"
+    homeCoords = $("#home").centerCoords()
 
-    # should be top: -2780px, left: -2390px
-    console.log home_center_y
-    console.log home_center_x
-    #.transformOrigin(home_center_x, home_center_y)
-
-    $("#stage").addClass "zoomed-out"
+    $("#stage")
+      .addClass "zoomed-out"
 
 backHome = ->
   $("body").on "click", ".return-home", (e)->
@@ -35,9 +30,26 @@ backHome = ->
     $("#stage").removeClass "zoomed-out"
 
 jQuery.fn.transformOrigin = (x, y) ->
+  str = "#{x}px #{y}px"
+  str = "#{x}% #{y}%"
+
   $(this).css
-    "-webkit-transform-origin": "#{x} #{y}"
-    "-moz-transform-origin": "#{x} #{y}"
-    "-ms-transform-origin": "#{x} #{y}"
-    "-o-transform-origin": "#{x} #{y}"
-    "transform-origin": "#{x} #{y}"
+    "-webkit-transform-origin": "#{str}"
+    "-moz-transform-origin": "#{str}"
+    "-ms-transform-origin": "#{str}"
+    "-o-transform-origin": "#{str}"
+    "transform-origin": "#{str}"
+
+jQuery.fn.centerCoords = ->
+  pos = $(this).position()
+
+  top = $(this).outerHeight() / 2 + pos.top
+  left = $(this).outerWidth() / 2 + pos.left
+
+  top = (top * 100) / $("#stage").height()
+  left = (left * 100) / $("#stage").width()
+
+  {
+    top: top
+    left: left
+  }

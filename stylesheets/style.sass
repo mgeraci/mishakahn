@@ -46,22 +46,44 @@ h3
   position: absolute
   top: $home-y * -1
   left: $home-x * -1
-  width: 10000px
-  height: 10000px
+  width: $stage-width
+  height: $stage-height
   +transition(all $duration ease-in-out)
   +gradient(blue, orange)
-  +transform-origin($home-x $home-y)
+  //+transform-origin($stage-width / 2 $stage-height / 2)
 
   &.zoomed-out
     +transform(scale(0.3))
 
-#test
+.test
   position: absolute
-  width: 20px
-  height: 20px
-  background: red
-  top: 4687px
-  left: 4040px
+  width: 800px
+  height: 600px
+
+  &#test1
+    background: red
+    top: 2277px
+    left: 3040px
+
+  &#test2
+    background: green
+    top: 4487px
+    left: 4040px
+
+  &#test3
+    background: blue
+    top: 8007px
+    left: 440px
+
+  &#test4
+    background: cornsilk
+    top: 3407px
+    left: 2060px
+
+  &#test5
+    background: lime
+    top: 2117px
+    left: 4890px
 
 #home
   position: absolute
@@ -73,11 +95,16 @@ h3
   padding: $gutter
   background: $white
 
-  ul, li
-    +stackwide
+  ul
+    float: left
 
   li
+    +stackwide
     margin-top: $gutter / 3
+
+  img
+    float: left
+    margin-left: $gutter * 2
 
   .return-home
     display: none
