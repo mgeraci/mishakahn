@@ -1,7 +1,7 @@
 $white: #fff
 
 $gutter: 24px
-$duration: 1s
+$duration: 2s
 
 $home-x: 3000px
 $home-y: 3000px
@@ -20,6 +20,11 @@ $stage-height: 10000px
   -webkit-transition: $args
   -moz-transition: $args
   transition: $args
+
+=transition3($args1, $args2, $args3)
+  -webkit-transition: $args1, $args2, $args3
+  -moz-transition: $args1, $args2, $args3
+  transition: $args1, $args2, $args3
 
 =transform($args)
   -webkit-transform: $args

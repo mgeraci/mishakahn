@@ -10,7 +10,7 @@ $ ->
   sizeHome()
   initializePosition()
   homeLinks()
-  backHome()
+  returnHome()
 
 sizeHome = ->
   $("#home").outerWidth $(window).width()
@@ -34,7 +34,9 @@ homeLinks = ->
       $("#stage").removeClass "zoomed-out"
     , duration / 2)
 
-backHome = ->
+    $("#fixed-return-to-home").fadeIn duration
+
+returnHome = ->
   $("body").on "click", ".return-home", (e)->
     $("#home .return-home").hide()
     $("#stage").removeClass "zoomed-out"
