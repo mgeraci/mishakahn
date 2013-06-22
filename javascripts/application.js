@@ -15,9 +15,19 @@
   yImage = 0;
 
   $(function() {
+    var x, y;
     sizeHome();
     homeLinks();
-    return backHome();
+    backHome();
+    x = 500;
+    y = 500;
+    $("#test").css({
+      top: y,
+      left: x
+    });
+    $("#stage").transformOrigin("" + x + "px " + y + "px");
+    _positionStageOn($("#test"));
+    return $("#stage").transform("scale(1.0)");
   });
 
   sizeHome = function() {
@@ -49,7 +59,7 @@
 
   _centerStageOn = function(el) {
     var elCoords;
-    elCoords = $(el).centerCoords(true);
+    elCoords = $(el).centerCoords();
     console.log(elCoords);
     return $("#stage").transformOrigin("" + elCoords.left + " " + elCoords.top);
   };
@@ -59,7 +69,10 @@
     pos = $(el).position();
     top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2;
     left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2;
-    return $("#stage").transform("scale(1) translate(" + left + "px, " + top + "px)");
+    return $("#stage").css({
+      top: top,
+      left: left
+    });
   };
 
   jQuery.fn.centerCoords = function(percent) {

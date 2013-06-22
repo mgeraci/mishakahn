@@ -14,6 +14,15 @@ $ ->
 
   #$("body").click ->
     #doctypeZoom 2
+  
+  x = 500
+  y = 500
+  $("#test").css
+    top: y
+    left: x
+  $("#stage").transformOrigin "#{x}px #{y}px"
+  _positionStageOn $("#test")
+  $("#stage").transform "scale(1.0)"
 
 sizeHome = ->
   $("#home").outerWidth $(window).width()
@@ -44,7 +53,7 @@ backHome = ->
 ##################################################
 
 _centerStageOn = (el)->
-  elCoords = $(el).centerCoords(true)
+  elCoords = $(el).centerCoords()
   console.log elCoords
 
   #str = "#{x}px #{y}px"
@@ -57,7 +66,10 @@ _positionStageOn = (el)->
   top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
   left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
 
-  $("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
+  #$("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
+  $("#stage").css
+    top: top
+    left: left
 
 jQuery.fn.centerCoords = (percent = false)->
   pos = $(this).position()
