@@ -12,8 +12,12 @@ $ ->
   homeLinks()
   backHome()
 
-  $("body").click ->
-    doctypeZoom 2
+  $("#stage").panzoom
+    transition: true
+    duration: 1000
+    minScale: 0.01
+    maxScale: 1
+    $zoomRange: $("input")
 
 sizeHome = ->
   $("#home").outerWidth $(window).width()

@@ -18,8 +18,12 @@
     sizeHome();
     homeLinks();
     backHome();
-    return $("body").click(function() {
-      return doctypeZoom(2);
+    return $("#stage").panzoom({
+      transition: true,
+      duration: 1000,
+      minScale: 0.01,
+      maxScale: 1,
+      $zoomRange: $("input")
     });
   });
 
