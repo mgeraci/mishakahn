@@ -17,10 +17,7 @@
   $(function() {
     sizeHome();
     homeLinks();
-    backHome();
-    return $("body").click(function() {
-      return doctypeZoom(2);
-    });
+    return backHome();
   });
 
   sizeHome = function() {
@@ -38,6 +35,7 @@
       e.preventDefault();
       target = $(e.target).data("target");
       $("#home .return-home").show();
+      _centerStageOn($("#" + target));
       return _positionStageOn($("#" + target));
     });
   };
@@ -49,45 +47,39 @@
     });
   };
 
-  jQuery.fn.transformOrigin = function(x, y) {
-    var str;
-    str = "" + x + "px " + y + "px";
-    str = "" + x + "% " + y + "%";
-    return $(this).css({
-      "-webkit-transform-origin": "" + str,
-      "-moz-transform-origin": "" + str,
-      "-ms-transform-origin": "" + str,
-      "-o-transform-origin": "" + str,
-      "transform-origin": "" + str
-    });
-  };
-
-  jQuery.fn.centerCoords = function() {
-    var left, pos, top;
-    pos = $(this).position();
-    top = $(this).outerHeight() / 2 + pos.top;
-    left = $(this).outerWidth() / 2 + pos.left;
-    top = (top * 100) / $("#stage").height();
-    left = (left * 100) / $("#stage").width();
-    return {
-      top: top,
-      left: left
-    };
-  };
-
   _centerStageOn = function(el) {
     var elCoords;
-    elCoords = $(el).centerCoords();
-    return $("#stage").transformOrigin(elCoords.left, elCoords.top);
+    elCoords = $(el).centerCoords(true);
+    console.log(elCoords);
+    return $("#stage").transformOrigin("" + elCoords.left + " " + elCoords.top);
   };
 
   _positionStageOn = function(el) {
-    var pos;
+    var left, pos, top;
     pos = $(el).position();
-    return $("#stage").css({
-      top: pos.top * -1 + ($(window).height() - el.outerHeight()) / 2,
-      left: pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
-    });
+    top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2;
+    left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2;
+    return $("#stage").transform("scale(1) translate(" + left + "px, " + top + "px)");
+  };
+
+  jQuery.fn.centerCoords = function(percent) {
+    var left, pos, suffix, top;
+    if (percent == null) {
+      percent = false;
+    }
+    pos = $(this).position();
+    top = $(this).outerHeight() / 2 + pos.top;
+    left = $(this).outerWidth() / 2 + pos.left;
+    suffix = "px";
+    if (percent) {
+      top = (top * 100) / $("#stage").height();
+      left = (left * 100) / $("#stage").width();
+      suffix = "%";
+    }
+    return {
+      top: top + suffix,
+      left: left + suffix
+    };
   };
 
   window.doctypeZoom = function(delta) {
@@ -112,7 +104,7 @@
     yLast = yScreen;
     console.log("new:", xNew, yNew, scale);
     $("#stage").transform("scale(" + scale + ") translate(" + xNew + "px, " + yNew + "px)");
-    return $("#stage").transformOrigin("" + xImage + "px " + yImage + "px");
+    return $("#stage").dtTransformOrigin("" + xImage + "px " + yImage + "px");
   };
 
   jQuery.fn.transform = function(args) {

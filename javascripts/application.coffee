@@ -12,8 +12,8 @@ $ ->
   homeLinks()
   backHome()
 
-  $("body").click ->
-    doctypeZoom 2
+  #$("body").click ->
+    #doctypeZoom 2
 
 sizeHome = ->
   $("#home").outerWidth $(window).width()
@@ -30,7 +30,7 @@ homeLinks = ->
 
     $("#home .return-home").show() # block action on the home page
     #$("#stage").addClass "zoomed-out"
-    #_centerStageOn $("##{target}")
+    _centerStageOn $("##{target}")
     _positionStageOn $("##{target}")
     #setTimeout(->
       #$("#stage").removeClass "zoomed-out"
@@ -43,40 +43,38 @@ backHome = ->
 
 ##################################################
 
-jQuery.fn.transformOrigin = (x, y) ->
-  str = "#{x}px #{y}px"
-  str = "#{x}% #{y}%"
+_centerStageOn = (el)->
+  elCoords = $(el).centerCoords(true)
+  console.log elCoords
 
-  $(this).css
-    "-webkit-transform-origin": "#{str}"
-    "-moz-transform-origin": "#{str}"
-    "-ms-transform-origin": "#{str}"
-    "-o-transform-origin": "#{str}"
-    "transform-origin": "#{str}"
+  #str = "#{x}px #{y}px"
+  #str = "#{x}% #{y}%"
 
-jQuery.fn.centerCoords = ->
+  $("#stage").transformOrigin "#{elCoords.left} #{elCoords.top}"
+
+_positionStageOn = (el)->
+  pos = $(el).position()
+  top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
+  left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
+
+  $("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
+
+jQuery.fn.centerCoords = (percent = false)->
   pos = $(this).position()
 
   top = $(this).outerHeight() / 2 + pos.top
   left = $(this).outerWidth() / 2 + pos.left
+  suffix = "px"
 
-  top = (top * 100) / $("#stage").height()
-  left = (left * 100) / $("#stage").width()
+  if percent
+    top = (top * 100) / $("#stage").height()
+    left = (left * 100) / $("#stage").width()
+    suffix = "%"
 
   {
-    top: top
-    left: left
+    top: top + suffix
+    left: left + suffix
   }
-
-_centerStageOn = (el)->
-  elCoords = $(el).centerCoords()
-  $("#stage").transformOrigin(elCoords.left, elCoords.top)
-
-_positionStageOn = (el)->
-  pos = $(el).position()
-  $("#stage").css
-    top: pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
-    left: pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
 
 ############################################
 
@@ -118,7 +116,10 @@ window.doctypeZoom = (delta)->
   console.log "new:", xNew, yNew, scale
 
   $("#stage").transform "scale(#{scale}) translate(#{xNew}px, #{yNew}px)"
-  $("#stage").transformOrigin "#{xImage}px #{yImage}px"
+  $("#stage").dtTransformOrigin "#{xImage}px #{yImage}px"
+
+###########################################
+# css3 helpers
 
 jQuery.fn.transform = (args)->
   $(this).css
