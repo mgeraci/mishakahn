@@ -1,6 +1,4 @@
-# COMMENT OF SCRIPT HERE
-# you can make as many tabs as you wish...
-# tab names are actually arbitrary at this point too.
+# Consular script to launch tabs for development
 
 tab do
   run "cd ~/Web/mishakahn"
