@@ -39,17 +39,28 @@
   };
 
   _moveToElement = function(el) {
+    var returnLink;
     _setStageOriginTo(el);
     $("#stage").addClass("zoomed-out");
     _positionStageOn(el);
     setTimeout(function() {
       return $("#stage").removeClass("zoomed-out");
     }, duration / 2);
+    returnLink = $("#fixed-return-home");
     if (el.attr("id") === "home") {
-      return $("#fixed-return-home").fadeOut(duration);
+      return returnLink.animate({
+        opacity: 0
+      }, duration / 2, function() {
+        return returnLink.hide();
+      });
     } else {
       return setTimeout(function() {
-        return $("#fixed-return-home").fadeIn(duration);
+        returnLink.show().css({
+          opacity: 0
+        });
+        return $("#fixed-return-home").animate({
+          opacity: 1
+        }, duration / 2);
       }, duration + 500);
     }
   };

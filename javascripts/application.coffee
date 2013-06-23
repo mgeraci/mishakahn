@@ -43,11 +43,14 @@ _moveToElement = (el)->
     $("#stage").removeClass "zoomed-out"
   , duration / 2)
 
+  returnLink = $("#fixed-return-home")
   if el.attr("id") == "home"
-    $("#fixed-return-home").fadeOut duration
+    returnLink.animate {opacity: 0}, duration / 2, ->
+      returnLink.hide()
   else
     setTimeout(->
-      $("#fixed-return-home").fadeIn duration
+      returnLink.show().css {opacity: 0}
+      $("#fixed-return-home").animate {opacity: 1}, duration / 2
     , duration + 500)
 
 _setStageOriginTo = (el)->
