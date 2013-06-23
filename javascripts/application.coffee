@@ -1,17 +1,12 @@
 duration = 2000
-scale = 1 # scale of the image
-xLast = 0 # last x location on the screen
-yLast = 0 # last y location on the screen
-xImage = 0 # last x location on the image
-yImage = 0 # last y location on the image
 
 $ ->
-  # TODO add window resize, debounced
   sizeHome()
   initializePosition()
   homeLinks()
   returnHome()
 
+# TODO add window resize, debounced
 sizeHome = ->
   $("#home").outerWidth $(window).width()
   $("#home").outerHeight $(window).height()
@@ -23,25 +18,37 @@ homeLinks = ->
   $("body").on "click", "#home ul a", (e)->
     e.preventDefault()
 
-    target = $(e.target).data "target"
+    target = $("##{$(e.target).data "target"}")
+    _moveToElement target
 
     $("#home .return-home").show() # block action on the home page
 
-    _setStageOriginTo $("##{target}")
-    $("#stage").addClass "zoomed-out"
-    _positionStageOn $("##{target}")
-    setTimeout(->
-      $("#stage").removeClass "zoomed-out"
-    , duration / 2)
-
-    $("#fixed-return-to-home").fadeIn duration
-
 returnHome = ->
   $("body").on "click", ".return-home", (e)->
+    console.log 'hoooome'
     $("#home .return-home").hide()
-    $("#stage").removeClass "zoomed-out"
+    _moveToElement $("#home")
+
 
 ##################################################
+# position helpers
+
+# set the transform origin, zoom out, pan, and zoom in
+_moveToElement = (el)->
+  _setStageOriginTo el
+  $("#stage").addClass "zoomed-out"
+  _positionStageOn el
+
+  setTimeout(->
+    $("#stage").removeClass "zoomed-out"
+  , duration / 2)
+
+  if el.attr("id") == "home"
+    $("#fixed-return-home").fadeOut duration
+  else
+    setTimeout(->
+      $("#fixed-return-home").fadeIn duration
+    , duration + 500)
 
 _setStageOriginTo = (el)->
   elCoords = $(el).centerCoords()
@@ -75,6 +82,7 @@ jQuery.fn.centerCoords = (percent = false)->
     top: top + suffix
     left: left + suffix
   }
+
 
 ###########################################
 # css3 helpers

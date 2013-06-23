@@ -53,7 +53,7 @@ h3
   +gradient(blue, orange)
 
   &.zoomed-out
-    +transform(scale(0.3))
+    +transform(scale(0.15))
 
 .test
   position: absolute
@@ -73,7 +73,7 @@ h3
   &#test3
     background: blue
     top: 8007px
-    left: 440px
+    left: 980px
 
   &#test4
     background: cornsilk
@@ -124,6 +124,12 @@ h3
   bottom: 20px
   left: 20px
   float: left
-  padding: $gutter * 2
+  padding: $gutter / 2
   background: $white
   background: transparentize($white, 0.5)
+  border-radius: 3px
+  +transition(all 0.2s linear)
+  color: #000
+
+  &:hover
+    background: $white
