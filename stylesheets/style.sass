@@ -51,9 +51,13 @@ h3
   height: $stage-height
   +transition(all $duration ease-in-out)
   +gradient(blue, orange)
+  cursor: move
 
   &.zoomed-out
     +transform(scale(0.15))
+
+  &.panning
+    +transition(all 0 linear)
 
 .test
   position: absolute
@@ -87,6 +91,7 @@ h3
   +stack
   padding: $gutter
   background: $white
+  cursor: default
 
   ul
     float: left
@@ -98,6 +103,9 @@ h3
   img
     float: left
     margin-left: $gutter * 2
+
+  a
+    cursor: pointer
 
   .return-home
     display: none

@@ -1,10 +1,13 @@
 duration = 2000
+prevX = false
+prevY = false
 
 $ ->
   sizeHome()
   initializePosition()
   homeLinks()
   returnHome()
+  pan()
 
 # TODO add window resize, debounced
 sizeHome = ->
@@ -25,9 +28,47 @@ homeLinks = ->
 
 returnHome = ->
   $("body").on "click", ".return-home", (e)->
-    console.log 'hoooome'
     $("#home .return-home").hide()
     _moveToElement $("#home")
+		
+pan = ->
+	$("body").on "mousedown", (e)->
+		return if $(e.target).closest("#home").length || $("#stage").hasClass "zoomed-out"
+		$("#stage").addClass "panning"
+		prevX = false
+		prevY = false
+		
+	$("body").on "mouseup", (e)->
+		return if $(e.target).closest("#home").length || $("#stage").hasClass "zoomed-out"
+		$("#stage").removeClass "panning"
+
+	$("body").on "mousemove", (e)->
+		return unless $("#stage").hasClass "panning"
+		currentPos = $("#stage").position()
+
+		if prevX? && prevY? && prevX != false && prevY != false
+			deltaX = e.pageX - prevX
+			deltaY = e.pageY - prevY
+			newX = currentPos.left + deltaX
+			newY = currentPos.top + deltaY
+
+			# a little padding to show
+			padding = 20
+			maxX = ($("#stage").width() - $(window).width()) * -1 - padding
+			maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+
+			# keep from panning out of the boundaries
+			newX = padding if newX > padding # left
+			newY = padding if newY > padding # top
+			newX = maxX if newX < maxX # right
+			newY = maxY if newY < maxY # bottom
+
+			$("#stage").css
+				top: newY
+				left: newX
+
+		prevX = e.pageX
+		prevY = e.pageY
 
 
 ##################################################
