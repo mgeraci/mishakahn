@@ -1,6 +1,7 @@
 duration = 2000
 prevX = false
 prevY = false
+mousePos = false
 
 $ ->
   sizeHome()
@@ -9,6 +10,7 @@ $ ->
   returnHome()
   pan()
   info()
+  movementStats()
 
 sizeHome = ->
 	_sizeHome()
@@ -97,6 +99,19 @@ info = ->
 
 	$("body").on "mouseleave", ".test", (e)->
 		$("#info").stop(true, true).fadeOut()
+
+movementStats = ->
+	$("body").on "mousemove", (e)->
+		mousePos = e
+
+	_movementTimeout()
+
+movementDur = 250
+_movementTimeout = ->
+	setTimeout(->
+		console.log mousePos
+		_movementTimeout()
+	, movementDur)
 
 
 ##################################################
