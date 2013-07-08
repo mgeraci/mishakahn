@@ -37,10 +37,14 @@ returnHome = ->
     $("#home .return-home").hide()
     _moveToElement $("#home")
 		
+# track mouseclick state, if pressed, check mouse position
+# and reposition the stage accordingly
 pan = ->
 	$("body").on "mousedown", (e)->
 		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
 		$("#stage").addClass "panning"
+
+		# reset drag coordinates
 		prevX = false
 		prevY = false
 		
@@ -58,7 +62,7 @@ pan = ->
 			newX = currentPos.left + deltaX
 			newY = currentPos.top + deltaY
 
-			# a little padding to show
+			# a little padding to show around the edges of the stage
 			padding = 20
 			maxX = ($("#stage").width() - $(window).width()) * -1 - padding
 			maxY = ($("#stage").height() - $(window).height()) * -1 - padding
@@ -76,6 +80,7 @@ pan = ->
 		prevX = e.pageX
 		prevY = e.pageY
 
+# hover on a piece to show info in a hovercard
 info = ->
 	$("body").on "mouseenter", ".test", (e)->
 		title = $(@).data "title"
