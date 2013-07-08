@@ -9,8 +9,13 @@ $ ->
   returnHome()
   pan()
 
-# TODO add window resize, debounced
 sizeHome = ->
+	_sizeHome()
+
+	$(window).resize ->
+		_sizeHome()
+
+_sizeHome = ->
   $("#home").outerWidth $(window).width()
   $("#home").outerHeight $(window).height()
 
@@ -33,13 +38,13 @@ returnHome = ->
 		
 pan = ->
 	$("body").on "mousedown", (e)->
-		return if $(e.target).closest("#home").length || $("#stage").hasClass "zoomed-out"
+		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
 		$("#stage").addClass "panning"
 		prevX = false
 		prevY = false
 		
 	$("body").on "mouseup", (e)->
-		return if $(e.target).closest("#home").length || $("#stage").hasClass "zoomed-out"
+		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
 		$("#stage").removeClass "panning"
 
 	$("body").on "mousemove", (e)->
@@ -77,12 +82,16 @@ pan = ->
 # set the transform origin, zoom out, pan, and zoom in
 _moveToElement = (el)->
   _setStageOriginTo el
-  $("#stage").addClass "zoomed-out"
+  $("#stage").addClass "zoomed-out animating"
   _positionStageOn el
 
   setTimeout(->
     $("#stage").removeClass "zoomed-out"
   , duration / 2)
+
+  setTimeout(->
+    $("#stage").removeClass "animating"
+  , duration * 2)
 
   returnLink = $("#fixed-return-home")
   if el.attr("id") == "home"

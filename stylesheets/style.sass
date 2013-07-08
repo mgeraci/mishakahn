@@ -52,6 +52,9 @@ h3
   +transition(all $duration ease-in-out)
   +gradient(blue, orange)
   cursor: move
+  
+  &.animating
+    cursor: default
 
   &.zoomed-out
     +transform(scale(0.15))

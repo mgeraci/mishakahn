@@ -101,6 +101,8 @@ h3 {
   -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='blue', endColorstr='orange');
   background-image: -ms-linear-gradient(top, blue, orange);
   cursor: move; }
+  #stage.animating {
+    cursor: default; }
   #stage.zoomed-out {
     -webkit-transform: scale(0.15);
     -moz-transform: scale(0.15);
