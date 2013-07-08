@@ -113,7 +113,8 @@ h3 {
     transition: all 0 linear; }
 
 .test {
-  position: absolute; }
+  position: absolute;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); }
   .test#test1 {
     top: 2277px;
     left: 3040px; }
@@ -140,6 +141,7 @@ h3 {
   clear: both;
   padding: 24px;
   background: white;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   cursor: default; }
   #home ul {
     float: left; }

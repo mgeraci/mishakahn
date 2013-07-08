@@ -32,6 +32,9 @@ h2
 h3
   font-size: 18px
 
+=floating-element
+  box-shadow: 0 5px 10px transparentize(black, 0.8)
+
 //////////////////////////////
 
 #viewport
@@ -64,7 +67,7 @@ h3
 
 .test
   position: absolute
-
+  +floating-element
   &#test1
     top: 2277px
     left: 3040px
@@ -94,6 +97,7 @@ h3
   +stack
   padding: $gutter
   background: $white
+  +floating-element
   cursor: default
 
   ul
