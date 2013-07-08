@@ -185,3 +185,29 @@ h3 {
   #fixed-return-home:hover {
     background: lightgrey;
     background: rgba(255, 255, 255, 0.8); }
+
+#info {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: none;
+  padding: 24px;
+  max-width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background: lightgrey; }
+  #info h1, #info h2 {
+    float: left;
+    font-size: 20px; }
+  #info h2 {
+    margin-left: 12px;
+    color: gray;
+    font-style: oblique;
+    font-weight: normal; }
+  #info .text {
+    float: left;
+    clear: both;
+    width: 100%;
+    font-size: 16px;
+    line-height: 20px;
+    color: gray; }

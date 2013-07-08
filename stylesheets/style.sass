@@ -142,3 +142,33 @@ h3
   &:hover
     background: lightgray
     background: transparentize($white, 0.2)
+
+#info
+  display: block
+  position: fixed
+  top: 0
+  right: 0
+  display: none
+  padding: $gutter
+  max-width: 300px
+  box-shadow: 0 2px 5px transparentize(black, 0.8)
+  background: lightgray
+
+  h1, h2
+    float: left
+    font-size: 20px
+
+  h1
+
+  h2
+    margin:
+      left: $gutter / 2
+    color: gray
+    font-style: oblique
+    font-weight: normal
+
+  .text
+    +stackwide
+    font-size: 16px
+    line-height: 20px
+    color: gray

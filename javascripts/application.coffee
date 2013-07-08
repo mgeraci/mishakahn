@@ -8,6 +8,7 @@ $ ->
   homeLinks()
   returnHome()
   pan()
+  info()
 
 sizeHome = ->
 	_sizeHome()
@@ -74,6 +75,23 @@ pan = ->
 
 		prevX = e.pageX
 		prevY = e.pageY
+
+info = ->
+	$("body").on "mouseenter", ".test", (e)->
+		title = $(@).data "title"
+		year = $(@).data "year"
+		text = $(@).data "text"
+
+		$("#info").hide().empty().append """
+			<h1>#{title}</h1>
+			<h2>#{year}</h2>
+			<div class="text">#{text}</div>
+		"""
+		
+		$("#info").stop(true, true).fadeIn()
+
+	$("body").on "mouseleave", ".test", (e)->
+		$("#info").stop(true, true).fadeOut()
 
 
 ##################################################
