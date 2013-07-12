@@ -2,6 +2,10 @@ duration = 2000
 prevX = false
 prevY = false
 mousePos = false
+momentumX = 0
+momentumY = 0
+slope = 0
+speed = 0
 
 $ ->
   sizeHome()
@@ -13,10 +17,10 @@ $ ->
   movementStats()
 
 sizeHome = ->
-	_sizeHome()
+  _sizeHome()
 
-	$(window).resize ->
-		_sizeHome()
+  $(window).resize ->
+    _sizeHome()
 
 _sizeHome = ->
   $("#home").outerWidth $(window).width()
@@ -38,80 +42,91 @@ returnHome = ->
   $("body").on "click", ".return-home", (e)->
     $("#home .return-home").hide()
     _moveToElement $("#home")
-		
+
 # track mouseclick state, if pressed, check mouse position
 # and reposition the stage accordingly
 pan = ->
-	$("body").on "mousedown", (e)->
-		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-		$("#stage").addClass "panning"
+  $("body").on "mousedown", (e)->
+    return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
+    $("#stage").addClass "panning"
 
-		# reset drag coordinates
-		prevX = false
-		prevY = false
-		
-	$("body").on "mouseup", (e)->
-		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-		$("#stage").removeClass "panning"
+    # reset drag coordinates
+    prevX = false
+    prevY = false
 
-	$("body").on "mousemove", (e)->
-		return unless $("#stage").hasClass "panning"
-		currentPos = $("#stage").position()
+  $("body").on "mouseup", (e)->
+    return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
+    $("#stage").removeClass "panning"
 
-		if prevX? && prevY? && prevX != false && prevY != false
-			deltaX = e.pageX - prevX
-			deltaY = e.pageY - prevY
-			newX = currentPos.left + deltaX
-			newY = currentPos.top + deltaY
+  $("body").on "mousemove", (e)->
+    return unless $("#stage").hasClass "panning"
+    currentPos = $("#stage").position()
 
-			# a little padding to show around the edges of the stage
-			padding = 20
-			maxX = ($("#stage").width() - $(window).width()) * -1 - padding
-			maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+    if prevX? && prevY? && prevX != false && prevY != false
+      deltaX = e.pageX - prevX
+      deltaY = e.pageY - prevY
+      newX = currentPos.left + deltaX
+      newY = currentPos.top + deltaY
 
-			# keep from panning out of the boundaries
-			newX = padding if newX > padding # left
-			newY = padding if newY > padding # top
-			newX = maxX if newX < maxX # right
-			newY = maxY if newY < maxY # bottom
+      # a little padding to show around the edges of the stage
+      padding = 20
+      maxX = ($("#stage").width() - $(window).width()) * -1 - padding
+      maxY = ($("#stage").height() - $(window).height()) * -1 - padding
 
-			$("#stage").css
-				top: newY
-				left: newX
+      # keep from panning out of the boundaries
+      newX = padding if newX > padding # left
+      newY = padding if newY > padding # top
+      newX = maxX if newX < maxX # right
+      newY = maxY if newY < maxY # bottom
 
-		prevX = e.pageX
-		prevY = e.pageY
+      $("#stage").css
+        top: newY
+        left: newX
+
+    prevX = e.pageX
+    prevY = e.pageY
 
 # hover on a piece to show info in a hovercard
 info = ->
-	$("body").on "mouseenter", ".test", (e)->
-		title = $(@).data "title"
-		year = $(@).data "year"
-		text = $(@).data "text"
+  $("body").on "mouseenter", ".test", (e)->
+    title = $(@).data "title"
+    year = $(@).data "year"
+    text = $(@).data "text"
 
-		$("#info").hide().empty().append """
-			<h1>#{title}</h1>
-			<h2>#{year}</h2>
-			<div class="text">#{text}</div>
-		"""
-		
-		$("#info").stop(true, true).fadeIn()
+    $("#info").hide().empty().append """
+      <h1>#{title}</h1>
+      <h2>#{year}</h2>
+      <div class="text">#{text}</div>
+    """
 
-	$("body").on "mouseleave", ".test", (e)->
-		$("#info").stop(true, true).fadeOut()
+    $("#info").stop(true, true).fadeIn()
 
+  $("body").on "mouseleave", ".test", (e)->
+    $("#info").stop(true, true).fadeOut()
+
+movementDur = 500
 movementStats = ->
-	$("body").on "mousemove", (e)->
-		mousePos = e
+  $("body").on "mousemove", (e)->
+    mousePos = e
 
-	_movementTimeout()
+  _movementTimeout()
 
-movementDur = 250
 _movementTimeout = ->
-	setTimeout(->
-		console.log mousePos
-		_movementTimeout()
-	, movementDur)
+  setTimeout(->
+    xTravel = mousePos.pageX - momentumX
+    yTravel = mousePos.pageY - momentumY
+    xTravel = 0.0000000001 if xTravel == 0
+    yTravel = 0.0000000001 if yTravel == 0
+
+    slope = yTravel / xTravel
+    distance = Math.sqrt(Math.abs(xTravel + yTravel))
+    speed = distance / movementDur # as pixels per duration, which will change if we change duration
+
+    momentumX = mousePos.pageX
+    momentumY = mousePos.pageY
+
+    _movementTimeout()
+  , movementDur)
 
 
 ##################################################
