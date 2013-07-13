@@ -49,14 +49,16 @@ returnHome = ->
 pan = ->
   $("body").on "mousedown", (e)->
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-    $("#stage").addClass "panning"
+    $("#stage").addClass "panning" unless $(e.target).closest("a").length
 
     # reset drag coordinates
     prevX = false
     prevY = false
 
   $("body").on "mouseup", (e)->
+    console.log $("#stage").attr "class"
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
+    return unless $("#stage").hasClass "panning"
     $("#stage").removeClass "panning"
 
     # animate some momentue
@@ -78,10 +80,10 @@ pan = ->
     y = Math.cos(angle) * hypotenuse
     console.log "x: #{x}, y: #{y}"
 
-    #$("#stage").animate({
-      #top: "+=#{y}"
-      #left: "+=#{x}"
-    #}, 500, "linear")
+    $("#stage").animate({
+      top: "+=#{x}"
+      left: "+=#{y}"
+    }, 500, "linear")
 
   $("body").on "mousemove", (e)->
     return unless $("#stage").hasClass "panning"

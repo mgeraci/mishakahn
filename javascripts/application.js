@@ -68,20 +68,30 @@
       if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
         return;
       }
-      $("#stage").addClass("panning");
+      if (!$(e.target).closest("a").length) {
+        $("#stage").addClass("panning");
+      }
       prevX = false;
       return prevY = false;
     });
     $("body").on("mouseup", function(e) {
       var hypotenuse, x, y;
+      console.log($("#stage").attr("class"));
       if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
+        return;
+      }
+      if (!$("#stage").hasClass("panning")) {
         return;
       }
       $("#stage").removeClass("panning");
       hypotenuse = 500;
       x = Math.sin(angle) * hypotenuse;
       y = Math.cos(angle) * hypotenuse;
-      return console.log("x: " + x + ", y: " + y);
+      console.log("x: " + x + ", y: " + y);
+      return $("#stage").animate({
+        top: "+=" + x,
+        left: "+=" + y
+      }, 500, "linear");
     });
     return $("body").on("mousemove", function(e) {
       var currentPos, deltaX, deltaY, maxX, maxY, newX, newY, padding;
