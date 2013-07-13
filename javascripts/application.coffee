@@ -1,12 +1,10 @@
-duration = 2000
+duration = 2000 # how long each home => piece transition takes
 prevX = false
 prevY = false
-mousePos = false
-momentumX = 0
-momentumY = 0
-slope = 0
-speed = 0
-angle = 0
+startCoords = {}
+endCoords = {}
+movementDuration = 0
+movementDurationTimeout = null
 
 $ ->
   sizeHome()
@@ -15,7 +13,6 @@ $ ->
   returnHome()
   pan()
   info()
-  movementStats()
 
 sizeHome = ->
   _sizeHome()
@@ -55,14 +52,36 @@ pan = ->
     prevX = false
     prevY = false
 
+    # set click coordinates
+    startCoords.x = e.pageX
+    startCoords.y = e.pageY
+
+    # start click timer
+    movementDuration = 0
+    _setTimer()
+
   $("body").on "mouseup", (e)->
-    console.log $("#stage").attr "class"
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
     return unless $("#stage").hasClass "panning"
     $("#stage").removeClass "panning"
 
-    # animate some momentue
-    #console.log "speed: #{speed}, slope: #{slope}"
+    clearTimeout movementDurationTimeout
+
+    # animate some momentum on release
+    endCoords.x = e.pageX
+    endCoords.y = e.pageY
+
+    xTravel = endCoords.x - startCoords.x
+    yTravel = endCoords.y - startCoords.y
+    xTravel = 0.0000000001 if xTravel == 0
+    yTravel = 0.0000000001 if yTravel == 0
+
+    slope = yTravel / xTravel
+    distance = Math.sqrt(Math.abs(xTravel + yTravel))
+    speed = distance / movementDuration
+    angle = Math.atan slope
+
+    console.log "speed: #{speed}, slope: #{slope}, angle: #{angle}"
 
     # given the speed and the slope, we can make a triangle.
     # the goal is to get the x and y distances from the hypotenuse
@@ -113,6 +132,14 @@ pan = ->
     prevX = e.pageX
     prevY = e.pageY
 
+_setTimer = ->
+  movementDurationTimeout = setTimeout(_counter, 1)
+
+_counter = ->
+  movementDuration++
+  _setTimer()
+
+
 # hover on a piece to show info in a hovercard
 info = ->
   $("body").on "mouseenter", ".test", (e)->
@@ -130,31 +157,6 @@ info = ->
 
   $("body").on "mouseleave", ".test", (e)->
     $("#info").stop(true, true).fadeOut()
-
-movementDur = 500
-movementStats = ->
-  $("body").on "mousemove", (e)->
-    mousePos = e
-
-  _movementTimeout()
-
-_movementTimeout = ->
-  setTimeout(->
-    xTravel = mousePos.pageX - momentumX
-    yTravel = mousePos.pageY - momentumY
-    xTravel = 0.0000000001 if xTravel == 0
-    yTravel = 0.0000000001 if yTravel == 0
-
-    slope = yTravel / xTravel
-    distance = Math.sqrt(Math.abs(xTravel + yTravel))
-    speed = distance / movementDur # as pixels per duration, which will change if we change duration
-    angle = Math.atan slope
-
-    momentumX = mousePos.pageX
-    momentumY = mousePos.pageY
-
-    _movementTimeout()
-  , movementDur)
 
 
 ##################################################
