@@ -78,7 +78,7 @@ pan = ->
 
     slope = yTravel / xTravel
     distance = Math.sqrt(Math.abs(xTravel + yTravel))
-    speed = distance / movementDuration
+    speed = (distance / movementDuration) * 1000 # in pixels per second
     angle = Math.atan slope
 
     console.log "speed: #{speed}, slope: #{slope}, angle: #{angle}"
