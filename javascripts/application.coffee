@@ -6,6 +6,7 @@ momentumX = 0
 momentumY = 0
 slope = 0
 speed = 0
+angle = 0
 
 $ ->
   sizeHome()
@@ -57,6 +58,30 @@ pan = ->
   $("body").on "mouseup", (e)->
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
     $("#stage").removeClass "panning"
+
+    # animate some momentue
+    #console.log "speed: #{speed}, slope: #{slope}"
+
+    # given the speed and the slope, we can make a triangle.
+    # the goal is to get the x and y distances from the hypotenuse
+    # and we can calculate the hypotenuse from the speed and slope.
+    # the slope also gives us the angle of the hypotenuse
+    #
+    # sin(angle) = rise / hypotenuse
+    # => rise = sin(angle) * hypotenuse
+    #
+    # cos(angle) = run / hypotenuse
+    # => run = cos(angle) * hypotenuse
+
+    hypotenuse = 500
+    x = Math.sin(angle) * hypotenuse
+    y = Math.cos(angle) * hypotenuse
+    console.log "x: #{x}, y: #{y}"
+
+    #$("#stage").animate({
+      #top: "+=#{y}"
+      #left: "+=#{x}"
+    #}, 500, "linear")
 
   $("body").on "mousemove", (e)->
     return unless $("#stage").hasClass "panning"
@@ -121,6 +146,7 @@ _movementTimeout = ->
     slope = yTravel / xTravel
     distance = Math.sqrt(Math.abs(xTravel + yTravel))
     speed = distance / movementDur # as pixels per duration, which will change if we change duration
+    angle = Math.atan slope
 
     momentumX = mousePos.pageX
     momentumY = mousePos.pageY
