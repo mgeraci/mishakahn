@@ -46,7 +46,8 @@ returnHome = ->
 pan = ->
   $("body").on "mousedown", (e)->
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-    $("#stage").addClass "panning" unless $(e.target).closest("a").length
+    return if $(e.target).closest("a").length || $(e.target).closest("img").length
+    $("#stage").stop(true).addClass "panning"
 
     # reset drag coordinates
     prevX = false
@@ -65,9 +66,9 @@ pan = ->
     return unless $("#stage").hasClass "panning"
     $("#stage").removeClass "panning"
 
+    # animate momentum on release
     clearTimeout movementDurationTimeout
 
-    # animate some momentum on release
     endCoords.x = e.pageX
     endCoords.y = e.pageY
 
@@ -86,19 +87,18 @@ pan = ->
 
     deltaX = distance / (Math.sqrt(slope * slope + 1))
     deltaX = deltaX * -1 if xTravel < 0
-
     deltaY = slope * deltaX
 
-    newX = endCoords.x + deltaX
-    newY = endCoords.y - deltaY # invert newY to convert from math to screen position
+    pos = $("#stage").position()
+    newX = pos.left + deltaX
+    newY = pos.top - deltaY
+    maxxedCoords = _panMax(newX, newY)
 
-    if speed > 1000
-      console.log 'animating'
+    if speed > 500
       $("#stage").addClass("momentum").animate({
-        top: "+=#{deltaY * -1}"
-        left: "+=#{deltaX}"
+        top: maxxedCoords[1]
+        left: maxxedCoords[0]
       }, 1000, "easeOutQuint", ->
-        console.log 'done'
         $("#stage").removeClass("momentum")
       )
 
@@ -112,20 +112,11 @@ pan = ->
       newX = currentPos.left + deltaX
       newY = currentPos.top + deltaY
 
-      # a little padding to show around the edges of the stage
-      padding = 20
-      maxX = ($("#stage").width() - $(window).width()) * -1 - padding
-      maxY = ($("#stage").height() - $(window).height()) * -1 - padding
-
-      # keep from panning out of the boundaries
-      newX = padding if newX > padding # left
-      newY = padding if newY > padding # top
-      newX = maxX if newX < maxX # right
-      newY = maxY if newY < maxY # bottom
+      maxxedCoords = _panMax(newX, newY)
 
       $("#stage").css
-        top: newY
-        left: newX
+        top: maxxedCoords[1]
+        left: maxxedCoords[0]
 
     prevX = e.pageX
     prevY = e.pageY
@@ -136,6 +127,21 @@ _setTimer = ->
 _counter = ->
   movementDuration++
   _setTimer()
+
+# do not allow a coord to go too far outside of the stage
+_panMax = (newX, newY)->
+  # a little padding to show around the edges
+  padding = 20
+  maxX = ($("#stage").width() - $(window).width()) * -1 - padding
+  maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+
+  # keep from panning out of the boundaries
+  newX = padding if newX > padding # left
+  newY = padding if newY > padding # top
+  newX = maxX if newX < maxX # right
+  newY = maxY if newY < maxY # bottom
+
+  [newX, newY]
 
 
 # hover on a piece to show info in a hovercard
