@@ -72,20 +72,22 @@ pan = ->
     endCoords.y = e.pageY
 
     xTravel = endCoords.x - startCoords.x
-    yTravel = (endCoords.y - startCoords.y) * -1 # invert y to convert from screen position to math-style
+    yTravel = (endCoords.y - startCoords.y) * -1 # invert y to convert from screen position to math
 
     slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
-    #console.log slope
 
     distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
     speed = (distanceTraveled / movementDuration) * 1000 # in pixels per second
     distance = 100 # this should be calculated based on speed
+
     deltaX = distance / (Math.sqrt(slope * slope + 1))
-    deltaY = Math.abs(slope * deltaX)
+    deltaX = deltaX * -1 if xTravel < 0
 
-    newX = if xTravel >= 0 then endCoords.x + deltaX else endCoords.x - deltaX
-    newY = if yTravel >= 0 then endCoords.y - deltaY else endCoords.y + deltaY # opposite from above to convert from math to screen-position
+    deltaY = slope * deltaX
 
+    newX = endCoords.x + deltaX
+    newY = endCoords.y - deltaY # invert newY to convert from math to screen position
+ 
     console.log startCoords, endCoords, newX, newY
 
     #$("#stage").animate({

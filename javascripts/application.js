@@ -92,9 +92,12 @@
       speed = (distanceTraveled / movementDuration) * 1000;
       distance = 100;
       deltaX = distance / (Math.sqrt(slope * slope + 1));
-      deltaY = Math.abs(slope * deltaX);
-      newX = xTravel >= 0 ? endCoords.x + deltaX : endCoords.x - deltaX;
-      newY = yTravel >= 0 ? endCoords.y - deltaY : endCoords.y + deltaY;
+      if (xTravel < 0) {
+        deltaX = deltaX * -1;
+      }
+      deltaY = slope * deltaX;
+      newX = endCoords.x + deltaX;
+      newY = endCoords.y - deltaY;
       console.log(startCoords, endCoords, newX, newY);
       if (!$("#graphy").length) {
         $("body").append("<div id='graphy'></div>");
