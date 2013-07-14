@@ -7,12 +7,19 @@ movementDuration = 0
 movementDurationTimeout = null
 
 $ ->
+  copyHomeMenu()
   sizeHome()
   initializePosition()
-  homeLinks()
+  workLinks()
   returnHome()
   pan()
   info()
+
+copyHomeMenu = ->
+  return if $("#fixed-menu ul").length
+  menu = $("#home ul").clone()
+  $("#fixed-menu h1").after """<ul class="work-links"></ul>"""
+  $("#fixed-menu ul").append menu
 
 sizeHome = ->
   _sizeHome()
@@ -27,8 +34,8 @@ _sizeHome = ->
 initializePosition = ->
   _setStageOriginTo $("#home")
 
-homeLinks = ->
-  $("body").on "click", "#home ul a", (e)->
+workLinks = ->
+  $("body").on "click", "ul.work-links a", (e)->
     e.preventDefault()
 
     target = $("##{$(e.target).data "target"}")
@@ -180,14 +187,14 @@ _moveToElement = (el)->
     $("#stage").removeClass "animating"
   , duration * 2)
 
-  returnLink = $("#fixed-return-home")
+  returnLink = $("#fixed-menu")
   if el.attr("id") == "home"
     returnLink.animate {opacity: 0}, duration / 2, ->
       returnLink.hide()
   else
     setTimeout(->
       returnLink.show().css {opacity: 0}
-      $("#fixed-return-home").animate {opacity: 1}, duration / 2
+      $("#fixed-menu").animate {opacity: 1}, duration / 2
     , duration + 500)
 
 _setStageOriginTo = (el)->

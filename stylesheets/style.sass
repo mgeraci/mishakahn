@@ -130,22 +130,37 @@ h3
     &:hover
       box-shadow: 0 0 20px rgba(0,0,0,0.6)
 
-#fixed-return-home
+#fixed-menu
   display: none
   position: fixed
-  top: 20px
-  left: 20px
+  top: 0
+  left: 0
   float: left
+  width: 100px
+  height: 47px
+  overflow: hidden
   padding: $gutter / 2
   background: $white
   background: transparentize($white, 0.5)
-  border-radius: 3px
+  box-shadow: 0 2px 5px transparentize(black, 0.8)
   +transition(all 0.2s linear)
   color: #000
 
   &:hover
     background: lightgray
     background: transparentize($white, 0.2)
+    width: 200px
+    height: 100%
+
+  h1, ul, li, a
+    +stackwide
+
+  h1
+    text-transform: uppercase
+
+  a
+    margin:
+      top: $gutter / 2
 
 #info
   display: block
