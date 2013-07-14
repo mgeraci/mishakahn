@@ -72,37 +72,30 @@ pan = ->
     endCoords.y = e.pageY
 
     xTravel = endCoords.x - startCoords.x
-    yTravel = endCoords.y - startCoords.y
-    xTravel = 0.0000000001 if xTravel == 0
-    yTravel = 0.0000000001 if yTravel == 0
+    yTravel = (endCoords.y - startCoords.y) * -1 # invert y to convert from screen position to math-style
 
-    slope = yTravel / xTravel
-    distance = Math.sqrt(Math.abs(xTravel + yTravel))
-    speed = (distance / movementDuration) * 1000 # in pixels per second
-    angle = Math.atan slope
+    slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
+    #console.log slope
 
-    console.log "speed: #{speed}, slope: #{slope}, angle: #{angle}"
+    distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
+    speed = (distanceTraveled / movementDuration) * 1000 # in pixels per second
+    distance = 100 # this should be calculated based on speed
+    deltaX = distance / (Math.sqrt(slope * slope + 1))
+    deltaY = Math.abs(slope * deltaX)
 
-    # given the speed and the slope, we can make a triangle.
-    # the goal is to get the x and y distances from the hypotenuse
-    # and we can calculate the hypotenuse from the speed and slope.
-    # the slope also gives us the angle of the hypotenuse
-    #
-    # sin(angle) = rise / hypotenuse
-    # => rise = sin(angle) * hypotenuse
-    #
-    # cos(angle) = run / hypotenuse
-    # => run = cos(angle) * hypotenuse
+    newX = if xTravel >= 0 then endCoords.x + deltaX else endCoords.x - deltaX
+    newY = if yTravel >= 0 then endCoords.y - deltaY else endCoords.y + deltaY # opposite from above to convert from math to screen-position
 
-    hypotenuse = 500
-    x = Math.sin(angle) * hypotenuse
-    y = Math.cos(angle) * hypotenuse
-    console.log "x: #{x}, y: #{y}"
+    console.log startCoords, endCoords, newX, newY
 
-    $("#stage").animate({
-      top: "+=#{x}"
-      left: "+=#{y}"
-    }, 500, "linear")
+    #$("#stage").animate({
+      #top: "+=#{x}"
+      #left: "+=#{y}"
+    #}, 500, "linear")
+    $("body").append("<div id='graphy'></div>") unless $("#graphy").length
+    $("#graphy").css
+      top: endCoords.x + newX
+      left: endCoords.y + newY
 
   $("body").on "mousemove", (e)->
     return unless $("#stage").hasClass "panning"

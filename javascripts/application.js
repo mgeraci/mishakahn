@@ -74,7 +74,7 @@
       return _setTimer();
     });
     $("body").on("mouseup", function(e) {
-      var angle, distance, hypotenuse, slope, speed, x, xTravel, y, yTravel;
+      var deltaX, deltaY, distance, distanceTraveled, newX, newY, slope, speed, xTravel, yTravel;
       if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
         return;
       }
@@ -86,26 +86,23 @@
       endCoords.x = e.pageX;
       endCoords.y = e.pageY;
       xTravel = endCoords.x - startCoords.x;
-      yTravel = endCoords.y - startCoords.y;
-      if (xTravel === 0) {
-        xTravel = 0.0000000001;
+      yTravel = (endCoords.y - startCoords.y) * -1;
+      slope = xTravel === 0 ? 100 : yTravel / xTravel;
+      distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel);
+      speed = (distanceTraveled / movementDuration) * 1000;
+      distance = 100;
+      deltaX = distance / (Math.sqrt(slope * slope + 1));
+      deltaY = Math.abs(slope * deltaX);
+      newX = xTravel >= 0 ? endCoords.x + deltaX : endCoords.x - deltaX;
+      newY = yTravel >= 0 ? endCoords.y - deltaY : endCoords.y + deltaY;
+      console.log(startCoords, endCoords, newX, newY);
+      if (!$("#graphy").length) {
+        $("body").append("<div id='graphy'></div>");
       }
-      if (yTravel === 0) {
-        yTravel = 0.0000000001;
-      }
-      slope = yTravel / xTravel;
-      distance = Math.sqrt(Math.abs(xTravel + yTravel));
-      speed = (distance / movementDuration) * 1000;
-      angle = Math.atan(slope);
-      console.log("speed: " + speed + ", slope: " + slope + ", angle: " + angle);
-      hypotenuse = 500;
-      x = Math.sin(angle) * hypotenuse;
-      y = Math.cos(angle) * hypotenuse;
-      console.log("x: " + x + ", y: " + y);
-      return $("#stage").animate({
-        top: "+=" + x,
-        left: "+=" + y
-      }, 500, "linear");
+      return $("#graphy").css({
+        top: endCoords.x + newX,
+        left: endCoords.y + newY
+      });
     });
     return $("body").on("mousemove", function(e) {
       var currentPos, deltaX, deltaY, maxX, maxY, newX, newY, padding;
