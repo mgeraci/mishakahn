@@ -62,7 +62,7 @@ h3
   &.zoomed-out
     +transform(scale(0.15))
 
-  &.panning
+  &.panning, &.momentum
     +transition(all 0 linear)
 
 .test
@@ -172,11 +172,3 @@ h3
     font-size: 16px
     line-height: 20px
     color: gray
-
-#graphy
-  position: fixed
-  display: block
-  width: 10px
-  height: 10px
-  background: orange
-  z-index: 1000

@@ -77,8 +77,12 @@ pan = ->
     slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
 
     distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
-    speed = (distanceTraveled / movementDuration) * 1000 # in pixels per second
-    distance = 100 # this should be calculated based on speed
+    speed = ((distanceTraveled / movementDuration) * 1000) || 0 # in pixels per second
+
+    # range of speed is roughly 0-20000. convert to a reasonable range
+    maxSpeed = 20000
+    maxDistance = 800
+    distance = (speed * maxDistance) / maxSpeed
 
     deltaX = distance / (Math.sqrt(slope * slope + 1))
     deltaX = deltaX * -1 if xTravel < 0
@@ -87,17 +91,16 @@ pan = ->
 
     newX = endCoords.x + deltaX
     newY = endCoords.y - deltaY # invert newY to convert from math to screen position
- 
-    console.log startCoords, endCoords, newX, newY
 
-    #$("#stage").animate({
-      #top: "+=#{x}"
-      #left: "+=#{y}"
-    #}, 500, "linear")
-    $("body").append("<div id='graphy'></div>") unless $("#graphy").length
-    $("#graphy").css
-      top: endCoords.x + newX
-      left: endCoords.y + newY
+    if speed > 1000
+      console.log 'animating'
+      $("#stage").addClass("momentum").animate({
+        top: "+=#{deltaY * -1}"
+        left: "+=#{deltaX}"
+      }, 1000, "easeOutQuint", ->
+        console.log 'done'
+        $("#stage").removeClass("momentum")
+      )
 
   $("body").on "mousemove", (e)->
     return unless $("#stage").hasClass "panning"

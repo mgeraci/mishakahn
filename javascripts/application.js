@@ -74,7 +74,7 @@
       return _setTimer();
     });
     $("body").on("mouseup", function(e) {
-      var deltaX, deltaY, distance, distanceTraveled, newX, newY, slope, speed, xTravel, yTravel;
+      var deltaX, deltaY, distance, distanceTraveled, maxDistance, maxSpeed, newX, newY, slope, speed, xTravel, yTravel;
       if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
         return;
       }
@@ -89,8 +89,10 @@
       yTravel = (endCoords.y - startCoords.y) * -1;
       slope = xTravel === 0 ? 100 : yTravel / xTravel;
       distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel);
-      speed = (distanceTraveled / movementDuration) * 1000;
-      distance = 100;
+      speed = ((distanceTraveled / movementDuration) * 1000) || 0;
+      maxSpeed = 20000;
+      maxDistance = 800;
+      distance = (speed * maxDistance) / maxSpeed;
       deltaX = distance / (Math.sqrt(slope * slope + 1));
       if (xTravel < 0) {
         deltaX = deltaX * -1;
@@ -98,14 +100,16 @@
       deltaY = slope * deltaX;
       newX = endCoords.x + deltaX;
       newY = endCoords.y - deltaY;
-      console.log(startCoords, endCoords, newX, newY);
-      if (!$("#graphy").length) {
-        $("body").append("<div id='graphy'></div>");
+      if (speed > 1000) {
+        console.log('animating');
+        return $("#stage").addClass("momentum").animate({
+          top: "+=" + (deltaY * -1),
+          left: "+=" + deltaX
+        }, 1000, "easeOutQuint", function() {
+          console.log('done');
+          return $("#stage").removeClass("momentum");
+        });
       }
-      return $("#graphy").css({
-        top: endCoords.x + newX,
-        left: endCoords.y + newY
-      });
     });
     return $("body").on("mousemove", function(e) {
       var currentPos, deltaX, deltaY, maxX, maxY, newX, newY, padding;
