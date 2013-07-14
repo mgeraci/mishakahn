@@ -154,26 +154,6 @@
     return _setTimer();
   };
 
-  _panMax = function(newX, newY) {
-    var maxX, maxY, padding;
-    padding = 20;
-    maxX = ($("#stage").width() - $(window).width()) * -1 - padding;
-    maxY = ($("#stage").height() - $(window).height()) * -1 - padding;
-    if (newX > padding) {
-      newX = padding;
-    }
-    if (newY > padding) {
-      newY = padding;
-    }
-    if (newX < maxX) {
-      newX = maxX;
-    }
-    if (newY < maxY) {
-      newY = maxY;
-    }
-    return [newX, newY];
-  };
-
   info = function() {
     $("body").on("mouseenter", ".test", function(e) {
       var text, title, year;
@@ -253,6 +233,26 @@
       top: top + suffix,
       left: left + suffix
     };
+  };
+
+  _panMax = function(newX, newY) {
+    var maxX, maxY, padding;
+    padding = 20;
+    maxX = ($("#stage").width() - $(window).width()) * -1 - padding;
+    maxY = ($("#stage").height() - $(window).height()) * -1 - padding;
+    if (newX > padding) {
+      newX = padding;
+    }
+    if (newY > padding) {
+      newY = padding;
+    }
+    if (newX < maxX) {
+      newX = maxX;
+    }
+    if (newY < maxY) {
+      newY = maxY;
+    }
+    return [newX, newY];
   };
 
   jQuery.fn.transform = function(args) {

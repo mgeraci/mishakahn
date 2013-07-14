@@ -135,21 +135,6 @@ _counter = ->
   movementDuration++
   _setTimer()
 
-# do not allow a coord to go too far outside of the stage
-_panMax = (newX, newY)->
-  # a little padding to show around the edges
-  padding = 20
-  maxX = ($("#stage").width() - $(window).width()) * -1 - padding
-  maxY = ($("#stage").height() - $(window).height()) * -1 - padding
-
-  # keep from panning out of the boundaries
-  newX = padding if newX > padding # left
-  newY = padding if newY > padding # top
-  newX = maxX if newX < maxX # right
-  newY = maxY if newY < maxY # bottom
-
-  [newX, newY]
-
 
 # hover on a piece to show info in a hovercard
 info = ->
@@ -229,6 +214,21 @@ jQuery.fn.centerCoords = (percent = false)->
     top: top + suffix
     left: left + suffix
   }
+
+# do not allow a coord to go too far outside of the stage
+_panMax = (newX, newY)->
+  # a little padding to show around the edges
+  padding = 20
+  maxX = ($("#stage").width() - $(window).width()) * -1 - padding
+  maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+
+  # keep from panning out of the boundaries
+  newX = padding if newX > padding # left
+  newY = padding if newY > padding # top
+  newX = maxX if newX < maxX # right
+  newY = maxY if newY < maxY # bottom
+
+  [newX, newY]
 
 
 ###########################################
