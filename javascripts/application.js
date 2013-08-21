@@ -102,6 +102,7 @@
       slope = xTravel === 0 ? 100 : yTravel / xTravel;
       distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel);
       speed = ((distanceTraveled / movementDuration) * 1000) || 0;
+      console.log(speed);
       maxSpeed = 20000;
       maxDistance = 800;
       distance = (speed * maxDistance) / maxSpeed;
@@ -114,7 +115,7 @@
       newX = pos.left + deltaX;
       newY = pos.top - deltaY;
       maxxedCoords = _panMax(newX, newY);
-      if (speed > 500) {
+      if (speed > 700) {
         return $("#stage").addClass("momentum").animate({
           top: maxxedCoords[1],
           left: maxxedCoords[0]

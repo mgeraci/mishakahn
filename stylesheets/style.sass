@@ -52,18 +52,15 @@ h3
   left: $home-x * -1
   width: $stage-width
   height: $stage-height
-  +transition(all $duration ease-in-out)
   +gradient(blue, orange)
   cursor: move
 
   &.animating
     cursor: default
+    +transition(all $duration ease-in-out)
 
   &.zoomed-out
     +transform(scale(0.15))
-
-  &.panning, &.momentum
-    +transition(all 0 linear)
 
   img
     cursor: default

@@ -51,6 +51,7 @@ returnHome = ->
 # track mouseclick state, if pressed, check mouse position
 # and reposition the stage accordingly
 pan = ->
+  # on mousedown, store click coords
   $("body").on "mousedown", (e)->
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
     return if $(e.target).closest("a").length || $(e.target).closest("img").length
@@ -68,6 +69,7 @@ pan = ->
     movementDuration = 0
     _setTimer()
 
+  # on mouseup, animate momentum
   $("body").on "mouseup", (e)->
     return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
     return unless $("#stage").hasClass "panning"
@@ -86,6 +88,7 @@ pan = ->
 
     distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
     speed = ((distanceTraveled / movementDuration) * 1000) || 0 # in pixels per second
+    console.log speed
 
     # range of speed is roughly 0-20000. convert to a reasonable range
     maxSpeed = 20000
@@ -101,7 +104,7 @@ pan = ->
     newY = pos.top - deltaY
     maxxedCoords = _panMax(newX, newY)
 
-    if speed > 500
+    if speed > 700
       $("#stage").addClass("momentum").animate({
         top: maxxedCoords[1]
         left: maxxedCoords[0]
@@ -109,6 +112,7 @@ pan = ->
         $("#stage").removeClass("momentum")
       )
 
+  # on mousemove, pan the canvas
   $("body").on "mousemove", (e)->
     return unless $("#stage").hasClass "panning"
     currentPos = $("#stage").position()
@@ -118,7 +122,6 @@ pan = ->
       deltaY = e.pageY - prevY
       newX = currentPos.left + deltaX
       newY = currentPos.top + deltaY
-
       maxxedCoords = _panMax(newX, newY)
 
       $("#stage").css
