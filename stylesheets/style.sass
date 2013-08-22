@@ -8,6 +8,7 @@
   box-sizing: border-box
 
 body
+  font-stye: oblique !important
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif
   font-size: 16px
   background: lightgray
@@ -127,16 +128,24 @@ h3
     &:hover
       box-shadow: 0 0 20px rgba(0,0,0,0.6)
 
+$menu-width: 200px
+$menu-padding: $gutter / 2
 #fixed-menu
+  // don't know why, but firefox doesn't get border-box on this element
+  // unless stated here explicitely, with !important.
+  -moz-box-sizing: border-box !important
+
   display: none
   position: fixed
+  overflow: hidden
   top: 0
   left: 0
+
   float: left
   width: 100px
   height: 47px
-  overflow: hidden
-  padding: $gutter / 2
+  padding: $menu-padding
+
   background: $white
   background: transparentize($white, 0.5)
   box-shadow: 0 2px 5px transparentize(black, 0.8)
@@ -146,14 +155,20 @@ h3
   &:hover
     background: lightgray
     background: transparentize($white, 0.2)
-    width: 200px
+    width: $menu-width
     height: 100%
 
   h1, ul, li, a
-    +stackwide
+    +stack
 
   h1
     text-transform: uppercase
+    margin: 0
+
+  ul
+    width: $menu-width - $menu-padding * 2
+    margin:
+      top: $gutter / 2
 
   a
     margin:

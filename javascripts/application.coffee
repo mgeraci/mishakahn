@@ -18,8 +18,7 @@ $ ->
 copyHomeMenu = ->
   return if $("#fixed-menu ul").length
   menu = $("#home ul").clone()
-  $("#fixed-menu h1").after """<ul class="work-links"></ul>"""
-  $("#fixed-menu ul").append menu
+  $("#fixed-menu h1").after menu
 
 sizeHome = ->
   _sizeHome()
@@ -53,8 +52,12 @@ returnHome = ->
 pan = ->
   # on mousedown, store click coords
   $("body").on "mousedown", (e)->
-    return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-    return if $(e.target).closest("a").length || $(e.target).closest("img").length
+    return if $("#stage").hasClass("animating") ||
+      $(e.target).closest("#home").length ||
+      $(e.target).closest("a").length ||
+      $(e.target).closest("img").length ||
+      $(e.target).closest("#fixed-menu").length
+
     $("#stage").stop(true).addClass "panning"
 
     # reset drag coordinates
@@ -88,7 +91,6 @@ pan = ->
 
     distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
     speed = ((distanceTraveled / movementDuration) * 1000) || 0 # in pixels per second
-    console.log speed
 
     # range of speed is roughly 0-20000. convert to a reasonable range
     maxSpeed = 20000
@@ -182,8 +184,8 @@ _moveToElement = (el)->
   else
     setTimeout(->
       returnLink.show().css {opacity: 0}
-      $("#fixed-menu").animate {opacity: 1}, duration / 2
-    , duration + 500)
+      returnLink.animate {opacity: 1}, duration / 2
+    , duration)
 
 _setStageOriginTo = (el)->
   elCoords = $(el).centerCoords()

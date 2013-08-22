@@ -32,8 +32,7 @@
       return;
     }
     menu = $("#home ul").clone();
-    $("#fixed-menu h1").after("<ul class=\"work-links\"></ul>");
-    return $("#fixed-menu ul").append(menu);
+    return $("#fixed-menu h1").after(menu);
   };
 
   sizeHome = function() {
@@ -71,10 +70,7 @@
 
   pan = function() {
     $("body").on("mousedown", function(e) {
-      if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
-        return;
-      }
-      if ($(e.target).closest("a").length || $(e.target).closest("img").length) {
+      if ($("#stage").hasClass("animating") || $(e.target).closest("#home").length || $(e.target).closest("a").length || $(e.target).closest("img").length || $(e.target).closest("#fixed-menu").length) {
         return;
       }
       $("#stage").stop(true).addClass("panning");
@@ -102,7 +98,6 @@
       slope = xTravel === 0 ? 100 : yTravel / xTravel;
       distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel);
       speed = ((distanceTraveled / movementDuration) * 1000) || 0;
-      console.log(speed);
       maxSpeed = 20000;
       maxDistance = 800;
       distance = (speed * maxDistance) / maxSpeed;
@@ -192,10 +187,10 @@
         returnLink.show().css({
           opacity: 0
         });
-        return $("#fixed-menu").animate({
+        return returnLink.animate({
           opacity: 1
         }, duration / 2);
-      }, duration + 500);
+      }, duration);
     }
   };
 
