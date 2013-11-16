@@ -1,6 +1,9 @@
 @import reset
 @import bourbon/bourbon
+@import bourbon/addons/_timing-functions
 @import mixins
+
+$transition-time: 1200ms
 
 *
   +box-sizing(border-box)
@@ -18,12 +21,19 @@ body
     top: 80px
   border: 1px solid orange
 
+#zoom-wrapper
+  +transition(all $transition-time / 2 ease-in)
+
+  &.zoomed-out
+    +transition(all $transition-time / 2 ease-out)
+    +transform(scale(0.8))
+
 #field
   position: absolute
   display: block
   width: 2000px
   height: 2000px
-  +transition(all 800ms ease)
+  +transition(all $transition-time linear)
   background: darken(palegoldenrod, 10%)
 
 .grid
