@@ -15,14 +15,16 @@
   };
 
   centerOnItem = function(el) {
-    var centerX, centerY, height, item, position, width;
+    var centerX, centerY, fieldX, fieldY, height, item, position, width;
     item = $(el);
     position = item.position();
     width = item.width();
     height = item.height();
     centerX = Math.round(position.left + width / 2);
     centerY = Math.round(position.top + height / 2);
-    return $("#field").transform("translate(" + (centerX * -1) + "px, " + (centerY * -1) + "px)");
+    fieldX = centerX - $("#wrapper").width() / 2;
+    fieldY = centerY - $("#wrapper").height() / 2;
+    return $("#field").transform("translate(" + (fieldX * -1) + "px, " + (fieldY * -1) + "px)");
   };
 
 }).call(this);

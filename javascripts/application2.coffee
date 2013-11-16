@@ -16,8 +16,11 @@ centerOnItem = (el)->
 	centerX = Math.round(position.left + width / 2)
 	centerY = Math.round(position.top + height / 2)
 
+	fieldX = centerX - $("#wrapper").width() / 2
+	fieldY = centerY - $("#wrapper").height() / 2
+
 	#$("#field").css
 		#top: centerY * -1
 		#left: centerX * -1
 
-	$("#field").transform "translate(#{centerX * -1}px, #{centerY * -1}px)"
+	$("#field").transform "translate(#{fieldX * -1}px, #{fieldY * -1}px)"
