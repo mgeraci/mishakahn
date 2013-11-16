@@ -1,0 +1,293 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+body {
+  background: palegoldenrod; }
+
+#wrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 800px;
+  position: relative;
+  left: 50%;
+  margin-left: -400px;
+  height: 600px;
+  margin-top: 80px;
+  border: 1px solid orange; }
+
+#field {
+  position: absolute;
+  display: block;
+  width: 2000px;
+  height: 2000px;
+  -webkit-transition: all 400ms ease;
+  -moz-transition: all 400ms ease;
+  transition: all 400ms ease;
+  background: #e6dd7f; }
+
+.grid {
+  position: absolute;
+  background: #ddd155;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-family: helvetica;
+  color: #aa9e22;
+  line-height: 22px; }
+  .grid#grid1 {
+    top: 200px;
+    left: 200px; }
+  .grid#grid2 {
+    top: 200px;
+    left: 400px; }
+  .grid#grid3 {
+    top: 200px;
+    left: 600px; }
+  .grid#grid4 {
+    top: 200px;
+    left: 800px; }
+  .grid#grid5 {
+    top: 200px;
+    left: 1000px; }
+  .grid#grid6 {
+    top: 200px;
+    left: 1200px; }
+  .grid#grid7 {
+    top: 200px;
+    left: 1400px; }
+  .grid#grid8 {
+    top: 200px;
+    left: 1600px; }
+  .grid#grid9 {
+    top: 200px;
+    left: 1800px; }
+  .grid#grid10 {
+    top: 400px;
+    left: 200px; }
+  .grid#grid11 {
+    top: 400px;
+    left: 400px; }
+  .grid#grid12 {
+    top: 400px;
+    left: 600px; }
+  .grid#grid160 {
+    top: 400px;
+    left: 800px; }
+  .grid#grid14 {
+    top: 400px;
+    left: 1000px; }
+  .grid#grid15 {
+    top: 400px;
+    left: 1200px; }
+  .grid#grid16 {
+    top: 400px;
+    left: 1400px; }
+  .grid#grid17 {
+    top: 400px;
+    left: 1600px; }
+  .grid#grid18 {
+    top: 400px;
+    left: 1800px; }
+  .grid#grid19 {
+    top: 600px;
+    left: 200px; }
+  .grid#grid20 {
+    top: 600px;
+    left: 600px; }
+  .grid#grid21 {
+    top: 600px;
+    left: 600px; }
+  .grid#grid22 {
+    top: 600px;
+    left: 800px; }
+  .grid#grid23 {
+    top: 600px;
+    left: 1000px; }
+  .grid#grid24 {
+    top: 600px;
+    left: 1200px; }
+  .grid#grid25 {
+    top: 600px;
+    left: 1600px; }
+  .grid#grid26 {
+    top: 600px;
+    left: 1600px; }
+  .grid#grid27 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid28 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid29 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid30 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid31 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid32 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid33 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid34 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid35 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid36 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid37 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid38 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid39 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid40 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid41 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid42 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid43 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid44 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid45 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid46 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid47 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid48 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid49 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid50 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid51 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid52 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid53 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid54 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid55 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid56 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid57 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid58 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid59 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid60 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid61 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid62 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid63 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid64 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid65 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid66 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid67 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid68 {
+    top: 600px;
+    left: 1800px; }
+  .grid#grid69 {
+    top: 600px;
+    left: 1800px; }
