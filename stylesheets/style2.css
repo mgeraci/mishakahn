@@ -70,9 +70,9 @@ body {
   display: block;
   width: 2000px;
   height: 2000px;
-  -webkit-transition: all 400ms ease;
-  -moz-transition: all 400ms ease;
-  transition: all 400ms ease;
+  -webkit-transition: all 800ms ease;
+  -moz-transition: all 800ms ease;
+  transition: all 800ms ease;
   background: #e6dd7f; }
 
 .grid {
@@ -84,6 +84,8 @@ body {
   font-family: helvetica;
   color: #aa9e22;
   line-height: 22px; }
+  .grid.active {
+    background: #77b455; }
   .grid#grid1 {
     top: 200px;
     left: 200px; }
@@ -120,7 +122,7 @@ body {
   .grid#grid12 {
     top: 400px;
     left: 600px; }
-  .grid#grid160 {
+  .grid#grid13 {
     top: 400px;
     left: 800px; }
   .grid#grid14 {
@@ -143,7 +145,7 @@ body {
     left: 200px; }
   .grid#grid20 {
     top: 600px;
-    left: 600px; }
+    left: 400px; }
   .grid#grid21 {
     top: 600px;
     left: 600px; }
@@ -166,58 +168,58 @@ body {
     top: 600px;
     left: 1800px; }
   .grid#grid28 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid29 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid30 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid31 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid32 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid33 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid34 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid35 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid36 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid37 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 200px; }
   .grid#grid38 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 400px; }
   .grid#grid39 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 600px; }
   .grid#grid40 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 800px; }
   .grid#grid41 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 1000px; }
   .grid#grid42 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 1200px; }
   .grid#grid43 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 1400px; }
   .grid#grid44 {
-    top: 600px;
-    left: 1800px; }
+    top: 1000px;
+    left: 1600px; }
   .grid#grid45 {
-    top: 600px;
+    top: 800px;
     left: 1800px; }
   .grid#grid46 {
     top: 600px;
