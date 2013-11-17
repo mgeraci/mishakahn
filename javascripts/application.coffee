@@ -24,7 +24,7 @@ $ ->
 
 # get the transition time from the css
 getTransitionTime = ->
-	transitionTime = $("#stage").css("transition").split(" ")[1]
+	transitionTime = $("#transition-time").css("transition").split(" ")[1]
 
 	transitionTime = if transitionTime.match(/ms$/)
 		parseInt(trantisionTime.replace(/ms$/, ""), 10)
@@ -194,56 +194,46 @@ info = ->
 
 # set the transform origin, zoom out, pan, and zoom in
 _moveToElement = (el)->
-	item = $(el)
-	position = item.position()
-	width = item.width()
-	height = item.height()
+	element = $(el)
+	position = element.position()
+	width = element.width()
+	height = element.height()
+	isHome = element.attr("id") == "home"
 
 	# center of the element
-	centerX = Math.round(position.left + width / 2)
-	centerY = Math.round(position.top + height / 2)
-	console.log centerX, centerY
+	centerOfElementX = Math.round(position.left + width / 2)
+	centerOfElementY = Math.round(position.top + height / 2)
 
-	# add the offset from home not being at 0, 0
-	centerX = homeX #- centerX
-	centerY = homeY #- centerY
-
-	# offset for the field
-	fieldX = centerX #- $("#stage").width() / 2
-	fieldY = centerY #- $("#stage").height() / 2
+	# how far to move the field
+	if isHome
+		fieldX = 0
+		fieldY = 0
+	else
+		fieldX = centerOfElementX - homeX
+		fieldY = centerOfElementY - homeY
 
 	translateString = "translate(#{fieldX * -1}px, #{fieldY * -1}px)"
 
 	$("#zoom-wrapper").addClass("zoomed-out")
-	$("#stage").transform "#{translateString}"
+	$("#stage").addClass("animating").transform "#{translateString}"
 
 	setTimeout(=>
 		$("#zoom-wrapper").removeClass("zoomed-out")
 	, transitionTime / 2)
 
-	###
-	_setStageOriginTo el
-	$("#stage").addClass "zoomed-out animating"
-	_positionStageOn el
-
-	setTimeout(->
-	  $("#stage").removeClass "zoomed-out"
-	, duration / 2)
-
-	setTimeout(->
-	  $("#stage").removeClass "animating"
-	, duration * 2)
+	setTimeout(=>
+		$("#stage").removeClass("animating")
+	, transitionTime)
 
 	returnLink = $("#fixed-menu")
-	if el.attr("id") == "home"
-	  returnLink.animate {opacity: 0}, duration / 2, ->
+	if isHome
+	  returnLink.animate {opacity: 0}, transitionTime / 2, ->
 	    returnLink.hide()
 	else
 	  setTimeout(->
 	    returnLink.show().css {opacity: 0}
-	    returnLink.animate {opacity: 1}, duration / 2
-	  , duration)
-	###
+	    returnLink.animate {opacity: 1}, transitionTime / 2
+	  , transitionTime)
 
 _setStageOriginTo = (el)->
 	elCoords = $(el).centerCoords()

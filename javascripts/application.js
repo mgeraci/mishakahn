@@ -33,7 +33,7 @@
   });
 
   getTransitionTime = function() {
-    transitionTime = $("#stage").css("transition").split(" ")[1];
+    transitionTime = $("#transition-time").css("transition").split(" ")[1];
     return transitionTime = transitionTime.match(/ms$/) ? parseInt(trantisionTime.replace(/ms$/, ""), 10) : parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000;
   };
 
@@ -186,49 +186,48 @@
   };
 
   _moveToElement = function(el) {
-    var centerX, centerY, fieldX, fieldY, height, item, position, translateString, width,
+    var centerOfElementX, centerOfElementY, element, fieldX, fieldY, height, isHome, position, returnLink, translateString, width,
       _this = this;
-    item = $(el);
-    position = item.position();
-    width = item.width();
-    height = item.height();
-    centerX = Math.round(position.left + width / 2);
-    centerY = Math.round(position.top + height / 2);
-    console.log(centerX, centerY);
-    centerX = homeX;
-    centerY = homeY;
-    fieldX = centerX;
-    fieldY = centerY;
+    element = $(el);
+    position = element.position();
+    width = element.width();
+    height = element.height();
+    isHome = element.attr("id") === "home";
+    centerOfElementX = Math.round(position.left + width / 2);
+    centerOfElementY = Math.round(position.top + height / 2);
+    if (isHome) {
+      fieldX = 0;
+      fieldY = 0;
+    } else {
+      fieldX = centerOfElementX - homeX;
+      fieldY = centerOfElementY - homeY;
+    }
     translateString = "translate(" + (fieldX * -1) + "px, " + (fieldY * -1) + "px)";
     $("#zoom-wrapper").addClass("zoomed-out");
-    $("#stage").transform("" + translateString);
-    return setTimeout(function() {
+    $("#stage").addClass("animating").transform("" + translateString);
+    setTimeout(function() {
       return $("#zoom-wrapper").removeClass("zoomed-out");
     }, transitionTime / 2);
-    /*
-    	_setStageOriginTo el
-    	$("#stage").addClass "zoomed-out animating"
-    	_positionStageOn el
-    
-    	setTimeout(->
-    	  $("#stage").removeClass "zoomed-out"
-    	, duration / 2)
-    
-    	setTimeout(->
-    	  $("#stage").removeClass "animating"
-    	, duration * 2)
-    
-    	returnLink = $("#fixed-menu")
-    	if el.attr("id") == "home"
-    	  returnLink.animate {opacity: 0}, duration / 2, ->
-    	    returnLink.hide()
-    	else
-    	  setTimeout(->
-    	    returnLink.show().css {opacity: 0}
-    	    returnLink.animate {opacity: 1}, duration / 2
-    	  , duration)
-    */
-
+    setTimeout(function() {
+      return $("#stage").removeClass("animating");
+    }, transitionTime);
+    returnLink = $("#fixed-menu");
+    if (isHome) {
+      return returnLink.animate({
+        opacity: 0
+      }, transitionTime / 2, function() {
+        return returnLink.hide();
+      });
+    } else {
+      return setTimeout(function() {
+        returnLink.show().css({
+          opacity: 0
+        });
+        return returnLink.animate({
+          opacity: 1
+        }, transitionTime / 2);
+      }, transitionTime);
+    }
   };
 
   _setStageOriginTo = function(el) {
