@@ -1,14 +1,12 @@
 @import reset
-@import gradient
+@import bourbon/bourbon
+@import bourbon/addons/_timing-functions
 @import variables
 
 *
-  -webkit-box-sizing: border-boz
-  -moz-box-sizing: border-boz
-  box-sizing: border-box
+  +box-sizing(border-box)
 
 body
-  font-stye: oblique !important
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif
   font-size: 16px
   background: lightgray
@@ -46,22 +44,29 @@ h3
   height: 100%
   overflow: hidden
 
+// zoom effect is separate from translation
+#zoom-wrapper
+  +transition(all $transition-time / 2 ease-in)
+
+  &.zoomed-out
+    +transition(all $transition-time / 2 ease-out)
+    +transform(scale(0.8))
+
 // positioned to show #home at the beginning
 #stage
   position: absolute
   top: $home-y * -1
   left: $home-x * -1
+  +transform(translate(0, 0))
   width: $stage-width
   height: $stage-height
-  +gradient(blue, orange)
+  +linear-gradient(blue, orange)
   cursor: move
+  +transition(all $transition-time linear)
 
   &.animating
     cursor: default
-    +transition(all $duration ease-in-out)
-
-  &.zoomed-out
-    +transform(scale(0.15))
+    +transition(all $transition-time linear)
 
   img
     cursor: default

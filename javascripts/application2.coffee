@@ -37,7 +37,6 @@ centerOnItem = (el)->
 	fieldX = centerX - $("#wrapper").width() / 2
 	fieldY = centerY - $("#wrapper").height() / 2
 
-
 	translateString = "translate(#{fieldX * -1}px, #{fieldY * -1}px)"
 
 	$("#zoom-wrapper").addClass("zoomed-out")

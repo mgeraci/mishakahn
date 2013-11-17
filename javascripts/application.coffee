@@ -1,4 +1,6 @@
-duration = 2000 # how long each home => piece transition takes
+transitionTime = 0
+homeX = 0
+homeY = 0
 prevX = false
 prevY = false
 startCoords = {}
@@ -7,157 +9,184 @@ movementDuration = 0
 movementDurationTimeout = null
 
 $ ->
-  copyHomeMenu()
-  sizeHome()
-  initializePosition()
-  workLinks()
-  returnHome()
-  pan()
-  info()
+	getTransitionTime()
+	setTransformOrigin() # run this on resize
+	getHomePosition()
+	copyHomeMenu()
+	sizeHome()
+	workLinks()
+	returnHome()
+	pan()
+	info()
+
+# Setup
+###############################################################################
+
+# get the transition time from the css
+getTransitionTime = ->
+	transitionTime = $("#stage").css("transition").split(" ")[1]
+
+	transitionTime = if transitionTime.match(/ms$/)
+		parseInt(trantisionTime.replace(/ms$/, ""), 10)
+	else
+		parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000
+
+setTransformOrigin = ->
+	x = $("#wrapper").width() / 2
+	y = $("#wrapper").height() / 2
+	$("#zoom-wrapper").transformOrigin "#{x}px #{y}px"
+
+getHomePosition = ->
+	position = $("#home").position()
+	homeX = position.left + $(window).width() / 2
+	homeY = position.top + $(window).height() / 2
 
 copyHomeMenu = ->
-  return if $("#fixed-menu ul").length
-  menu = $("#home ul").clone()
-  $("#fixed-menu h1").after menu
+	return if $("#fixed-menu ul").length
+	menu = $("#home ul").clone()
+	$("#fixed-menu h1").after menu
 
 sizeHome = ->
-  _sizeHome()
+	_sizeHome()
 
-  $(window).resize ->
-    _sizeHome()
+	$(window).resize ->
+	  _sizeHome()
 
 _sizeHome = ->
-  $("#home").outerWidth $(window).width()
-  $("#home").outerHeight $(window).height()
+	$("#home").outerWidth $(window).width()
+	$("#home").outerHeight $(window).height()
 
-initializePosition = ->
-  _setStageOriginTo $("#home")
+# Click-based navigation
+###############################################################################
 
 workLinks = ->
-  $("body").on "click", "ul.work-links a", (e)->
-    e.preventDefault()
+	$("body").on "click", "ul.work-links a", (e)->
+	  e.preventDefault()
 
-    target = $("##{$(e.target).data "target"}")
-    _moveToElement target
+	  target = $("##{$(e.target).data "target"}")
+	  _moveToElement target
 
-    $("#home .return-home").show() # block action on the home page
+	  $("#home .return-home").show() # block action on the home page
 
 returnHome = ->
-  $("body").on "click", ".return-home", (e)->
-    $("#home .return-home").hide()
-    _moveToElement $("#home")
+	$("body").on "click", ".return-home", (e)->
+	  $("#home .return-home").hide()
+	  _moveToElement $("#home")
+
+# Pan-based navigation
+###############################################################################
 
 # track mouseclick state, if pressed, check mouse position
 # and reposition the stage accordingly
 pan = ->
-  # on mousedown, store click coords
-  $("body").on "mousedown", (e)->
-    return if $("#stage").hasClass("animating") ||
-      $(e.target).closest("#home").length ||
-      $(e.target).closest("a").length ||
-      $(e.target).closest("img").length ||
-      $(e.target).closest("#fixed-menu").length
+	# on mousedown, store click coords
+	$("body").on "mousedown", (e)->
+	  return if $("#stage").hasClass("animating") ||
+	    $(e.target).closest("#home").length ||
+	    $(e.target).closest("a").length ||
+	    $(e.target).closest("img").length ||
+	    $(e.target).closest("#fixed-menu").length
 
-    $("#stage").stop(true).addClass "panning"
+	  $("#stage").stop(true).addClass "panning"
 
-    # reset drag coordinates
-    prevX = false
-    prevY = false
+	  # reset drag coordinates
+	  prevX = false
+	  prevY = false
 
-    # set click coordinates
-    startCoords.x = e.pageX
-    startCoords.y = e.pageY
+	  # set click coordinates
+	  startCoords.x = e.pageX
+	  startCoords.y = e.pageY
 
-    # start click timer
-    movementDuration = 0
-    _setTimer()
+	  # start click timer
+	  movementDuration = 0
+	  _setTimer()
 
-  # on mouseup, animate momentum
-  $("body").on "mouseup", (e)->
-    return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-    return unless $("#stage").hasClass "panning"
-    $("#stage").removeClass "panning"
+	# on mouseup, animate momentum
+	$("body").on "mouseup", (e)->
+	  return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
+	  return unless $("#stage").hasClass "panning"
+	  $("#stage").removeClass "panning"
 
-    # animate momentum on release
-    clearTimeout movementDurationTimeout
+	  # animate momentum on release
+	  clearTimeout movementDurationTimeout
 
-    endCoords.x = e.pageX
-    endCoords.y = e.pageY
+	  endCoords.x = e.pageX
+	  endCoords.y = e.pageY
 
-    xTravel = endCoords.x - startCoords.x
-    yTravel = (endCoords.y - startCoords.y) * -1 # invert y to convert from screen position to math
+	  xTravel = endCoords.x - startCoords.x
+	  yTravel = (endCoords.y - startCoords.y) * -1 # invert y to convert from screen position to math
 
-    slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
+	  slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
 
-    distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
-    speed = ((distanceTraveled / movementDuration) * 1000) || 0 # in pixels per second
+	  distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
+	  speed = ((distanceTraveled / movementDuration) * 1000) || 0 # in pixels per second
 
-    # range of speed is roughly 0-20000. convert to a reasonable range
-    maxSpeed = 20000
-    maxDistance = 800
-    distance = (speed * maxDistance) / maxSpeed
+	  # range of speed is roughly 0-20000. convert to a reasonable range
+	  maxSpeed = 20000
+	  maxDistance = 800
+	  distance = (speed * maxDistance) / maxSpeed
 
-    deltaX = distance / (Math.sqrt(slope * slope + 1))
-    deltaX = deltaX * -1 if xTravel < 0
-    deltaY = slope * deltaX
+	  deltaX = distance / (Math.sqrt(slope * slope + 1))
+	  deltaX = deltaX * -1 if xTravel < 0
+	  deltaY = slope * deltaX
 
-    pos = $("#stage").position()
-    newX = pos.left + deltaX
-    newY = pos.top - deltaY
-    maxxedCoords = _panMax(newX, newY)
+	  pos = $("#stage").position()
+	  newX = pos.left + deltaX
+	  newY = pos.top - deltaY
+	  maxxedCoords = _panMax(newX, newY)
 
-    if speed > 700
-      $("#stage").addClass("momentum").animate({
-        top: maxxedCoords[1]
-        left: maxxedCoords[0]
-      }, 1000, "easeOutQuint", ->
-        $("#stage").removeClass("momentum")
-      )
+	  if speed > 700
+	    $("#stage").addClass("momentum").animate({
+	      top: maxxedCoords[1]
+	      left: maxxedCoords[0]
+	    }, 1000, "easeOutQuint", ->
+	      $("#stage").removeClass("momentum")
+	    )
 
-  # on mousemove, pan the canvas
-  $("body").on "mousemove", (e)->
-    return unless $("#stage").hasClass "panning"
-    currentPos = $("#stage").position()
+	# on mousemove, pan the canvas
+	$("body").on "mousemove", (e)->
+	  return unless $("#stage").hasClass "panning"
+	  currentPos = $("#stage").position()
 
-    if prevX? && prevY? && prevX != false && prevY != false
-      deltaX = e.pageX - prevX
-      deltaY = e.pageY - prevY
-      newX = currentPos.left + deltaX
-      newY = currentPos.top + deltaY
-      maxxedCoords = _panMax(newX, newY)
+	  if prevX? && prevY? && prevX != false && prevY != false
+	    deltaX = e.pageX - prevX
+	    deltaY = e.pageY - prevY
+	    newX = currentPos.left + deltaX
+	    newY = currentPos.top + deltaY
+	    maxxedCoords = _panMax(newX, newY)
 
-      $("#stage").css
-        top: maxxedCoords[1]
-        left: maxxedCoords[0]
+	    $("#stage").css
+	      top: maxxedCoords[1]
+	      left: maxxedCoords[0]
 
-    prevX = e.pageX
-    prevY = e.pageY
+	  prevX = e.pageX
+	  prevY = e.pageY
 
 _setTimer = ->
-  movementDurationTimeout = setTimeout(_counter, 1)
+	movementDurationTimeout = setTimeout(_counter, 1)
 
 _counter = ->
-  movementDuration++
-  _setTimer()
+	movementDuration++
+	_setTimer()
 
 
 # hover on a piece to show info in a hovercard
 info = ->
-  $("body").on "mouseenter", ".test", (e)->
-    title = $(@).data "title"
-    year = $(@).data "year"
-    text = $(@).data "text"
+	$("body").on "mouseenter", ".test", (e)->
+	  title = $(@).data "title"
+	  year = $(@).data "year"
+	  text = $(@).data "text"
 
-    $("#info").hide().empty().append """
-      <h1>#{title}</h1>
-      <h2>#{year}</h2>
-      <div class="text">#{text}</div>
-    """
+	  $("#info").hide().empty().append """
+	    <h1>#{title}</h1>
+	    <h2>#{year}</h2>
+	    <div class="text">#{text}</div>
+	  """
 
-    $("#info").stop(true, true).fadeIn()
+	  $("#info").stop(true, true).fadeIn()
 
-  $("body").on "mouseleave", ".test", (e)->
-    $("#info").stop(true, true).fadeOut()
+	$("body").on "mouseleave", ".test", (e)->
+	  $("#info").stop(true, true).fadeOut()
 
 
 ##################################################
@@ -165,90 +194,119 @@ info = ->
 
 # set the transform origin, zoom out, pan, and zoom in
 _moveToElement = (el)->
-  _setStageOriginTo el
-  $("#stage").addClass "zoomed-out animating"
-  _positionStageOn el
+	item = $(el)
+	position = item.position()
+	width = item.width()
+	height = item.height()
 
-  setTimeout(->
-    $("#stage").removeClass "zoomed-out"
-  , duration / 2)
+	# center of the element
+	centerX = Math.round(position.left + width / 2)
+	centerY = Math.round(position.top + height / 2)
+	console.log centerX, centerY
 
-  setTimeout(->
-    $("#stage").removeClass "animating"
-  , duration * 2)
+	# add the offset from home not being at 0, 0
+	centerX = homeX #- centerX
+	centerY = homeY #- centerY
 
-  returnLink = $("#fixed-menu")
-  if el.attr("id") == "home"
-    returnLink.animate {opacity: 0}, duration / 2, ->
-      returnLink.hide()
-  else
-    setTimeout(->
-      returnLink.show().css {opacity: 0}
-      returnLink.animate {opacity: 1}, duration / 2
-    , duration)
+	# offset for the field
+	fieldX = centerX #- $("#stage").width() / 2
+	fieldY = centerY #- $("#stage").height() / 2
+
+	translateString = "translate(#{fieldX * -1}px, #{fieldY * -1}px)"
+
+	$("#zoom-wrapper").addClass("zoomed-out")
+	$("#stage").transform "#{translateString}"
+
+	setTimeout(=>
+		$("#zoom-wrapper").removeClass("zoomed-out")
+	, transitionTime / 2)
+
+	###
+	_setStageOriginTo el
+	$("#stage").addClass "zoomed-out animating"
+	_positionStageOn el
+
+	setTimeout(->
+	  $("#stage").removeClass "zoomed-out"
+	, duration / 2)
+
+	setTimeout(->
+	  $("#stage").removeClass "animating"
+	, duration * 2)
+
+	returnLink = $("#fixed-menu")
+	if el.attr("id") == "home"
+	  returnLink.animate {opacity: 0}, duration / 2, ->
+	    returnLink.hide()
+	else
+	  setTimeout(->
+	    returnLink.show().css {opacity: 0}
+	    returnLink.animate {opacity: 1}, duration / 2
+	  , duration)
+	###
 
 _setStageOriginTo = (el)->
-  elCoords = $(el).centerCoords()
-  $("#stage").transformOrigin "#{elCoords.left} #{elCoords.top}"
+	elCoords = $(el).centerCoords()
+	$("#stage").transformOrigin "#{elCoords.left} #{elCoords.top}"
 
 _positionStageOn = (el)->
-  pos = $(el).position()
-  top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
-  left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
+	pos = $(el).position()
+	top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
+	left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
 
-  #$("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
-  $("#stage").css
-    top: top
-    left: left
+	#$("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
+	$("#stage").css
+	  top: top
+	  left: left
 
 # return the center coordinates of an element.
 # defaults to px, optional %
 jQuery.fn.centerCoords = (percent = false)->
-  pos = $(this).position()
+	pos = $(this).position()
 
-  top = $(this).outerHeight() / 2 + pos.top
-  left = $(this).outerWidth() / 2 + pos.left
-  suffix = "px"
+	top = $(this).outerHeight() / 2 + pos.top
+	left = $(this).outerWidth() / 2 + pos.left
+	suffix = "px"
 
-  if percent
-    top = (top * 100) / $("#stage").height()
-    left = (left * 100) / $("#stage").width()
-    suffix = "%"
+	if percent
+	  top = (top * 100) / $("#stage").height()
+	  left = (left * 100) / $("#stage").width()
+	  suffix = "%"
 
-  {
-    top: top + suffix
-    left: left + suffix
-  }
+	{
+	  top: top + suffix
+	  left: left + suffix
+	}
 
 # do not allow a coord to go too far outside of the stage
 _panMax = (newX, newY)->
-  # a little padding to show around the edges
-  padding = 20
-  maxX = ($("#stage").width() - $(window).width()) * -1 - padding
-  maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+	# a little padding to show around the edges
+	padding = 20
+	maxX = ($("#stage").width() - $(window).width()) * -1 - padding
+	maxY = ($("#stage").height() - $(window).height()) * -1 - padding
 
-  # keep from panning out of the boundaries
-  newX = padding if newX > padding # left
-  newY = padding if newY > padding # top
-  newX = maxX if newX < maxX # right
-  newY = maxY if newY < maxY # bottom
+	# keep from panning out of the boundaries
+	newX = padding if newX > padding # left
+	newY = padding if newY > padding # top
+	newX = maxX if newX < maxX # right
+	newY = maxY if newY < maxY # bottom
 
-  [newX, newY]
+	[newX, newY]
 
 
 ###########################################
 # css3 helpers
 
 jQuery.fn.transform = (args)->
-  $(this).css
-    "-webkit-transform": args
-    "-moz-transform": args
-    "transform": args
+	$(this).css
+	  "-webkit-transform": args
+	  "-moz-transform": args
+	  "transform": args
 
 jQuery.fn.transformOrigin = (args)->
-  $(this).css
-    "-webkit-transform-origin": args
-    "-moz-transform-origin": args
-    "-ms-transform-origin": args
-    "-o-transform-origin": args
-    "transform-origin": args
+	$(this).css
+	  "-webkit-transform-origin": args
+	  "-moz-transform-origin": args
+	  "-ms-transform-origin": args
+	  "-o-transform-origin": args
+	  "transform-origin": args
