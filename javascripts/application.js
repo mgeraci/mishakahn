@@ -273,22 +273,4 @@
     }
   };
 
-  jQuery.fn.transform = function(args) {
-    return $(this).css({
-      "-webkit-transform": args,
-      "-moz-transform": args,
-      "transform": args
-    });
-  };
-
-  jQuery.fn.transformOrigin = function(args) {
-    return $(this).css({
-      "-webkit-transform-origin": args,
-      "-moz-transform-origin": args,
-      "-ms-transform-origin": args,
-      "-o-transform-origin": args,
-      "transform-origin": args
-    });
-  };
-
 }).call(this);
