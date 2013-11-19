@@ -1,34 +1,17 @@
-transitionTime = 1200 # a sensible default
-homeX = 0
-homeY = 0
-
 $ ->
-	getInitialValues()
+	copyHomeMenu()
 	setSizeAndResize()
 	clickNavigation.initialize()
-	pan.initialize()
+	#pan.initialize()
 	info.initialize()
 
 
 # Setup
-###############################################################################
+################################################################################
 
-getInitialValues = ->
-	# get the transition time from the css
-	transitionTime = $("#transition-time").css("transition").split(" ")[1]
-
-	transitionTime = if transitionTime.match(/ms$/)
-		parseInt(trantisionTime.replace(/ms$/, ""), 10)
-	else
-		parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000
-
-	# get the position of #home
-	position = $("#home").position()
-	homeX = position.left + $(window).width() / 2
-	homeY = position.top + $(window).height() / 2
-
-	# copy the home menu from #home to the position: fixed; one. TODO this should
-	# get output from the eventual backend
+# copy the home menu from #home to the position: fixed; one. TODO this should
+# get output from the eventual backend
+copyHomeMenu = ->
 	return if $("#fixed-menu ul").length
 	menu = $("#home ul").clone()
 	$("#fixed-menu h1").after menu
@@ -47,6 +30,7 @@ resizeFunction = ->
 
 	sizeHome(width, height)
 	setTransformOrigin(width, height)
+	clickNavigation.getHomeCenterCoords()
 
 sizeHome = (width, height)->
 	$("#home").outerWidth width
@@ -60,12 +44,33 @@ setTransformOrigin = (width, height)->
 ################################################################################
 
 clickNavigation = {
+	transitionTime: 1200 # a sensible default
+	homeX: 0
+	homeY: 0
+
 	initialize: ->
+		@getTransitionTime()
+		@getHomeCenterCoords()
+
 		$("body").on "click", "ul.work-links a", (e)=>
 			@goToPiece(e)
 
 		$("body").on "click", ".return-home", (e)=>
 			@returnHome()
+
+	getTransitionTime: ->
+		# get the transition time from the css
+		transitionTime = $("#transition-time").css("transition").split(" ")[1]
+
+		@transitionTime = if transitionTime.match(/ms$/)
+			parseInt(trantisionTime.replace(/ms$/, ""), 10)
+		else
+			parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000
+
+	getHomeCenterCoords: ->
+		position = $("#home").position()
+		@homeX = position.left + $(window).width() / 2
+		@homeY = position.top + $(window).height() / 2
 
 	goToPiece: (e)->
 		e.preventDefault()
@@ -97,8 +102,8 @@ clickNavigation = {
 			fieldX = 0
 			fieldY = 0
 		else
-			fieldX = centerOfElementX - homeX
-			fieldY = centerOfElementY - homeY
+			fieldX = centerOfElementX - @homeX
+			fieldY = centerOfElementY - @homeY
 
 		translateString = "translate(#{fieldX * -1}px, #{fieldY * -1}px)"
 
@@ -107,21 +112,21 @@ clickNavigation = {
 
 		setTimeout(=>
 			$("#zoom-wrapper").removeClass("zoomed-out")
-		, transitionTime / 2)
+		, @transitionTime / 2)
 
 		setTimeout(=>
 			$("#stage").removeClass("animating")
-		, transitionTime)
+		, @transitionTime)
 
 		returnLink = $("#fixed-menu")
 		if isHome
-			returnLink.animate {opacity: 0}, transitionTime / 2, ->
+			returnLink.animate {opacity: 0}, @transitionTime / 2, ->
 				returnLink.hide()
 		else
 			setTimeout(->
 				returnLink.show().css {opacity: 0}
-				returnLink.animate {opacity: 1}, transitionTime / 2
-			, transitionTime)
+				returnLink.animate {opacity: 1}, @transitionTime / 2
+			, @transitionTime)
 }
 
 
