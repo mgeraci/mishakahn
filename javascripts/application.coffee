@@ -235,38 +235,6 @@ _moveToElement = (el)->
 	    returnLink.animate {opacity: 1}, transitionTime / 2
 	  , transitionTime)
 
-_setStageOriginTo = (el)->
-	elCoords = $(el).centerCoords()
-	$("#stage").transformOrigin "#{elCoords.left} #{elCoords.top}"
-
-_positionStageOn = (el)->
-	pos = $(el).position()
-	top = pos.top * -1 + ($(window).height() - el.outerHeight()) / 2
-	left = pos.left * -1 + ($(window).width() - el.outerWidth()) / 2
-
-	#$("#stage").transform "scale(1) translate(#{left}px, #{top}px)"
-	$("#stage").css
-	  top: top
-	  left: left
-
-# return the center coordinates of an element.
-# defaults to px, optional %
-jQuery.fn.centerCoords = (percent = false)->
-	pos = $(this).position()
-
-	top = $(this).outerHeight() / 2 + pos.top
-	left = $(this).outerWidth() / 2 + pos.left
-	suffix = "px"
-
-	if percent
-	  top = (top * 100) / $("#stage").height()
-	  left = (left * 100) / $("#stage").width()
-	  suffix = "%"
-
-	{
-	  top: top + suffix
-	  left: left + suffix
-	}
 
 # do not allow a coord to go too far outside of the stage
 _panMax = (newX, newY)->
