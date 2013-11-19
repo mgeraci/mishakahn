@@ -2,8 +2,8 @@ $ ->
 	copyHomeMenu()
 	setSizeAndResize()
 	clickNavigation.initialize()
-	#pan.initialize()
-	info.initialize()
+	pan.initialize()
+	hovercards.initialize()
 
 
 # Setup
@@ -24,20 +24,18 @@ setSizeAndResize = ->
 	$(window).resize ->
 		resizeFunction()
 
+# on resize, set the size of #home to the window's size, and set the transform-
+# origin of the zoom wrapper to the center of the viewport
 resizeFunction = ->
 	width = $(window).width()
 	height = $(window).height()
 
-	sizeHome(width, height)
-	setTransformOrigin(width, height)
-	clickNavigation.getHomeCenterCoords()
-
-sizeHome = (width, height)->
 	$("#home").outerWidth width
 	$("#home").outerHeight height
 
-setTransformOrigin = (width, height)->
 	$("#zoom-wrapper").transformOrigin "#{width / 2}px #{height / 2}px"
+
+	clickNavigation.getHomeCenterCoords()
 
 
 # Click-based navigation
@@ -142,6 +140,16 @@ pan = {
 	movementDuration: 0
 	movementDurationTimeout: null
 
+	initialize: ->
+		$("body").on "mousedown", (e)=>
+			@mouseDown(e)
+
+		$("body").on "mouseup", (e)=>
+			@mouseUp(e)
+
+		$("body").on "mousemove", (e)=>
+			@mouseMove(e)
+
 	# on mousedown, store click coords
 	mouseDown: (e)->
 	  return if $("#stage").hasClass("animating") ||
@@ -198,6 +206,7 @@ pan = {
 	  newY = pos.top - deltaY
 	  maxxedCoords = @panMax(newX, newY)
 
+		###
 	  if speed > 700
 	    $("#stage").addClass("momentum").animate({
 	      top: maxxedCoords[1]
@@ -205,29 +214,34 @@ pan = {
 	    }, 1000, "easeOutQuint", ->
 	      $("#stage").removeClass("momentum")
 	    )
+		###
+
+	matrixToArray: (el)->
+		matrix = el.css("-webkit-transform")
+		res = matrix.substr(7, matrix.length - 8).split(', ')
+		[res[4], res[5]]
 
 	# on mousemove, pan the canvas
-	mouseMove: ->
+	mouseMove: (e)->
 		return unless $("#stage").hasClass "panning"
-		currentPos = $("#stage").position()
+		currentPos = @matrixToArray($("#stage"))
 
 		if @prevX? && @prevY? && @prevX != false && @prevY != false
 			deltaX = e.pageX - @prevX
 			deltaY = e.pageY - @prevY
-			newX = currentPos.left + deltaX
-			newY = currentPos.top + deltaY
+			newX = currentPos[0] + deltaX
+			newY = currentPos[1] + deltaY
 			maxxedCoords = @panMax(newX, newY)
+			console.log deltaX, deltaY, newX, newY, maxxedCoords
 
-			$("#stage").css
-				top: maxxedCoords[1]
-				left: maxxedCoords[0]
+			$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
 
 		@prevX = e.pageX
 		@prevY = e.pageY
 
 	# set a trimeout to keep track of how long the user is panning
 	setTimer: ->
-		@movementDurationTimeout = setTimeout(@counter, 1)
+		@movementDurationTimeout = setTimeout(@counter.bind(@), 1)
 
 	# recurse to count the duration of movement
 	counter: ->
@@ -248,21 +262,11 @@ pan = {
 		newY = maxY if newY < maxY # bottom
 
 		[newX, newY]
-
-	initialize: ->
-		$("body").on "mousedown", (e)=>
-			@mouseDown()
-
-		$("body").on "mouseup", (e)=>
-			@mouseUp()
-
-		$("body").on "mousemove", (e)=>
-			@mouseMove()
 }
 
 
 # hover on a piece to show info in a hovercard
-info = {
+hovercards = {
 	initialize: ->
 		$("body").on "mouseenter", ".test", (e)=>
 			@showHovercard(e.currentTarget)
