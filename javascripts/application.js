@@ -192,12 +192,6 @@
     	    )
     */
 
-    matrixToArray: function(el) {
-      var matrix, res;
-      matrix = el.css("-webkit-transform");
-      res = matrix.substr(7, matrix.length - 8).split(', ');
-      return [res[4], res[5]];
-    },
     mouseMove: function(e) {
       var currentPos, deltaX, deltaY, maxxedCoords, newX, newY;
       if (!$("#stage").hasClass("panning")) {
@@ -210,8 +204,8 @@
         newX = currentPos[0] + deltaX;
         newY = currentPos[1] + deltaY;
         maxxedCoords = this.panMax(newX, newY);
-        console.log(deltaX, deltaY, newX, newY, maxxedCoords);
-        $("#stage").transform("translate(" + maxxedCoords[0] + "px, " + maxxedCoords[1] + "px");
+        console.log(currentPos, newX, newY);
+        $("#stage").transform("translate(" + newX + "px, " + newY + "px");
       }
       this.prevX = e.pageX;
       return this.prevY = e.pageY;
@@ -222,6 +216,12 @@
     counter: function() {
       this.movementDuration++;
       return this.setTimer();
+    },
+    matrixToArray: function(el) {
+      var matrix, res;
+      matrix = el.css("-webkit-transform");
+      res = matrix.substr(7, matrix.length - 8).split(', ');
+      return [parseInt(res[4], 10), parseInt(res[5], 10)];
     },
     panMax: function(newX, newY) {
       var maxX, maxY, padding;

@@ -216,12 +216,9 @@ pan = {
 	    )
 		###
 
-	matrixToArray: (el)->
-		matrix = el.css("-webkit-transform")
-		res = matrix.substr(7, matrix.length - 8).split(', ')
-		[res[4], res[5]]
-
-	# on mousemove, pan the canvas
+	# on mousemove, pan the canvas. track the mouse's position across the
+	# viewport to get the x and y deltas, then apply that to the current
+	# css translation
 	mouseMove: (e)->
 		return unless $("#stage").hasClass "panning"
 		currentPos = @matrixToArray($("#stage"))
@@ -232,9 +229,11 @@ pan = {
 			newX = currentPos[0] + deltaX
 			newY = currentPos[1] + deltaY
 			maxxedCoords = @panMax(newX, newY)
-			console.log deltaX, deltaY, newX, newY, maxxedCoords
+			#console.log deltaX, deltaY, newX, newY
+			console.log currentPos, newX, newY
 
-			$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
+			#$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
+			$("#stage").transform "translate(#{newX}px, #{newY}px"
 
 		@prevX = e.pageX
 		@prevY = e.pageY
@@ -247,6 +246,12 @@ pan = {
 	counter: ->
 		@movementDuration++
 		@setTimer()
+
+	# get [x, y] coordinates from a css3 translation
+	matrixToArray: (el)->
+		matrix = el.css("-webkit-transform")
+		res = matrix.substr(7, matrix.length - 8).split(', ')
+		[parseInt(res[4], 10), parseInt(res[5], 10)]
 
 	# do not allow a coord to go too far outside of the stage
 	panMax: (newX, newY)->
