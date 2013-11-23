@@ -77,16 +77,16 @@
       return this.moveToElement($("#home"));
     },
     moveToElement: function(el) {
-      var centerOfElementX, centerOfElementY, element, fieldX, fieldY, height, isHome, position, returnLink, translateString, width,
+      var centerOfElementX, centerOfElementY, element, fieldX, fieldY, goingHome, height, menu, position, translateString, width,
         _this = this;
       element = $(el);
       position = element.position();
       width = element.width();
       height = element.height();
-      isHome = element.attr("id") === "home";
+      goingHome = element.attr("id") === "home";
       centerOfElementX = Math.round(position.left + width / 2);
       centerOfElementY = Math.round(position.top + height / 2);
-      if (isHome) {
+      if (goingHome) {
         fieldX = 0;
         fieldY = 0;
       } else {
@@ -99,26 +99,16 @@
       setTimeout(function() {
         return $("#zoom-wrapper").removeClass("zoomed-out");
       }, this.transitionTime / 2);
-      setTimeout(function() {
-        return $("#stage").removeClass("animating");
-      }, this.transitionTime);
-      returnLink = $("#fixed-menu");
-      if (isHome) {
-        return returnLink.animate({
-          opacity: 0
-        }, this.transitionTime / 2, function() {
-          return returnLink.hide();
-        });
-      } else {
-        return setTimeout(function() {
-          returnLink.show().css({
-            opacity: 0
-          });
-          return returnLink.animate({
-            opacity: 1
-          }, this.transitionTime / 2);
-        }, this.transitionTime);
+      menu = $("#fixed-menu");
+      if (goingHome) {
+        menu.removeClass("show");
       }
+      return setTimeout(function() {
+        $("#stage").removeClass("animating");
+        if (!goingHome) {
+          return menu.addClass("show");
+        }
+      }, this.transitionTime);
     }
   };
 
@@ -277,11 +267,11 @@
         year: $(el).data("year"),
         text: $(el).data("text")
       };
-      $("#info").hide().empty().append(this.template(params));
-      return $("#info").stop(true, true).fadeIn();
+      $("#info").empty().append(this.template(params));
+      return $("#info").addClass("show");
     },
     hideHovercard: function() {
-      return $("#info").stop(true, true).fadeOut();
+      return $("#info").removeClass("show");
     },
     template: function(params) {
       return "<h1>" + params.title + "</h1>\n<h2>" + params.year + "</h2>\n<div class=\"text\">" + params.text + "</div>";

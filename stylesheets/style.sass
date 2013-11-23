@@ -1,6 +1,7 @@
 @import reset
 @import bourbon/bourbon
 @import bourbon/addons/_timing-functions
+@import mixins
 @import variables
 
 *
@@ -147,28 +148,37 @@ $menu-padding: $gutter / 2
 	// unless stated here explicitely, with !important.
 	-moz-box-sizing: border-box !important
 
-	display: none
+	float: left
 	position: fixed
-	overflow: hidden
 	top: 0
 	left: 0
+	width: $menu-width
+	height: 100%
 
-	float: left
-	width: 100px
-	height: 47px
-	padding: $menu-padding
+	+fade-and-hide(hide, 500)
 
-	background: $white
-	background: transparentize($white, 0.5)
-	box-shadow: 0 2px 5px transparentize(black, 0.8)
-	+transition(all 0.2s linear)
-	color: #000
+	&.show
+		+fade-and-hide(show, 500)
 
-	&:hover
-		background: lightgray
-		background: transparentize($white, 0.2)
-		width: $menu-width
-		height: 100%
+	.content-wrapper
+		position: relative
+		overflow: hidden
+		float: left
+		width: 100px
+		height: 47px
+		padding: $menu-padding
+		+transition(all 0.2s linear)
+
+		background: $white
+		background: transparentize($white, 0.5)
+		box-shadow: 0 2px 5px transparentize(black, 0.8)
+		color: #000
+
+		&:hover
+			background: lightgray
+			background: transparentize($white, 0.2)
+			width: $menu-width
+			height: 100%
 
 	h1, ul, li, a
 		+stack
@@ -191,22 +201,25 @@ $menu-padding: $gutter / 2
 	position: fixed
 	top: 0
 	right: 0
-	display: none
 	padding: $gutter
 	max-width: 300px
 	box-shadow: 0 2px 5px transparentize(black, 0.8)
-	background: lightgray
+	background: $white
+	background: transparentize($white, 0.5)
+
+	+fade-and-hide(hide, 500)
+
+	&.show
+		+fade-and-hide(show, 500)
 
 	h1, h2
 		float: left
 		font-size: 20px
 
-	h1
-
 	h2
 		margin:
 			left: $gutter / 2
-		color: gray
+		color: #444
 		font-style: oblique
 		font-weight: normal
 
@@ -214,4 +227,4 @@ $menu-padding: $gutter / 2
 		+stackwide
 		font-size: 16px
 		line-height: 20px
-		color: gray
+		color: #444

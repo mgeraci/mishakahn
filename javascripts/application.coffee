@@ -90,14 +90,14 @@ clickNavigation = {
 		position = element.position()
 		width = element.width()
 		height = element.height()
-		isHome = element.attr("id") == "home"
+		goingHome = element.attr("id") == "home"
 
 		# center of the element
 		centerOfElementX = Math.round(position.left + width / 2)
 		centerOfElementY = Math.round(position.top + height / 2)
 
 		# how far to move the field
-		if isHome
+		if goingHome
 			fieldX = 0
 			fieldY = 0
 		else
@@ -113,19 +113,16 @@ clickNavigation = {
 			$("#zoom-wrapper").removeClass("zoomed-out")
 		, @transitionTime / 2)
 
+		menu = $("#fixed-menu")
+		if goingHome
+			menu.removeClass("show")
+
 		setTimeout(=>
 			$("#stage").removeClass("animating")
-		, @transitionTime)
 
-		returnLink = $("#fixed-menu")
-		if isHome
-			returnLink.animate {opacity: 0}, @transitionTime / 2, ->
-				returnLink.hide()
-		else
-			setTimeout(->
-				returnLink.show().css {opacity: 0}
-				returnLink.animate {opacity: 1}, @transitionTime / 2
-			, @transitionTime)
+			if !goingHome
+				menu.addClass("show")
+		, @transitionTime)
 }
 
 
@@ -307,11 +304,11 @@ hovercards = {
 			year: $(el).data "year"
 			text: $(el).data "text"
 
-		$("#info").hide().empty().append @template(params)
-		$("#info").stop(true, true).fadeIn()
+		$("#info").empty().append @template(params)
+		$("#info").addClass("show")
 
 	hideHovercard: ->
-		$("#info").stop(true, true).fadeOut()
+		$("#info").removeClass("show")
 
 	template: (params)->
 		"""
