@@ -45,7 +45,6 @@
     homeY: 0,
     initialize: function() {
       var _this = this;
-      this.getTransitionTime();
       this.getHomeCenterCoords();
       $("body").on("click", "ul.work-links a", function(e) {
         return _this.goToPiece(e);
@@ -53,11 +52,6 @@
       return $("body").on("click", ".return-home", function(e) {
         return _this.returnHome();
       });
-    },
-    getTransitionTime: function() {
-      var transitionTime;
-      transitionTime = $("#transition-time").css("transition").split(" ")[1];
-      return this.transitionTime = transitionTime.match(/ms$/) ? parseInt(trantisionTime.replace(/ms$/, ""), 10) : parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000;
     },
     getHomeCenterCoords: function() {
       var position;
@@ -144,7 +138,7 @@
       }
       if ($("#stage").hasClass("momentum")) {
         clearTimeout(this.momentumTimeout);
-        currentPos = this.matrixToArray($("#stage"));
+        currentPos = this.getTranslation($("#stage"));
         $("#stage").removeClass("momentum").transform("translate(" + currentPos[0] + "px, " + currentPos[1] + "px");
       }
       $("#stage").stop(true).addClass("panning");
@@ -180,7 +174,7 @@
         deltaX = deltaX * -1;
       }
       deltaY = slope * deltaX;
-      currentPos = this.matrixToArray($("#stage"));
+      currentPos = this.getTranslation($("#stage"));
       newX = currentPos[0] + deltaX;
       newY = currentPos[1] - deltaY;
       maxxedCoords = this.panMax(newX, newY);
@@ -196,7 +190,7 @@
       if (!$("#stage").hasClass("panning")) {
         return;
       }
-      currentPos = this.matrixToArray($("#stage"));
+      currentPos = this.getTranslation($("#stage"));
       if ((this.prevX != null) && (this.prevY != null) && this.prevX !== false && this.prevY !== false) {
         deltaX = e.pageX - this.prevX;
         deltaY = e.pageY - this.prevY;
@@ -215,11 +209,11 @@
       this.movementDuration++;
       return this.setTimer();
     },
-    matrixToArray: function(el) {
-      var matrix, res;
-      matrix = el.css("-webkit-transform");
-      res = matrix.substr(7, matrix.length - 8).split(', ');
-      return [parseInt(res[4], 10), parseInt(res[5], 10)];
+    getTranslation: function(el) {
+      var numbers, numbersArray;
+      numbers = el.css("transform").replace(/.+\(/, "").replace(/\)(.+)?/, "");
+      numbersArray = numbers.split(",");
+      return [parseFloat(numbersArray[0], 10), parseFloat(numbersArray[1], 10)];
     },
     calculateMaxes: function() {
       var homeHeight, homePosition, homeWidth, stageHeight, stageWidth;

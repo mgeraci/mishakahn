@@ -191,42 +191,36 @@ h3 {
 
 #fixed-menu {
   -moz-box-sizing: border-box !important;
+  position: relative;
+  overflow: hidden;
   float: left;
   position: fixed;
   top: 0;
   left: 0;
-  width: 200px;
-  height: 100%;
+  width: 100px;
+  height: 47px;
+  padding: 12px;
+  background: white;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: black;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: opacity 500ms ease 0, visibility 0ms linear 600ms;
-  -moz-transition: opacity 500ms ease 0, visibility 0ms linear 600ms;
-  transition: opacity 500ms ease 0, visibility 0ms linear 600ms; }
+  -webkit-transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms;
+  -moz-transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms;
+  transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms; }
   #fixed-menu.show {
     opacity: 1;
     visibility: visible;
-    -webkit-transition: visibility 0ms linear, opacity 500ms ease 10ms;
-    -moz-transition: visibility 0ms linear, opacity 500ms ease 10ms;
-    transition: visibility 0ms linear, opacity 500ms ease 10ms; }
-  #fixed-menu .content-wrapper {
-    position: relative;
-    overflow: hidden;
-    float: left;
-    width: 100px;
-    height: 47px;
-    padding: 12px;
-    -webkit-transition: all 0.2s linear;
-    -moz-transition: all 0.2s linear;
-    transition: all 0.2s linear;
-    background: white;
-    background: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    color: black; }
-    #fixed-menu .content-wrapper:hover {
-      background: lightgrey;
-      background: rgba(255, 255, 255, 0.8);
-      width: 200px;
-      height: 100%; }
+    -webkit-transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms;
+    -moz-transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms;
+    transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms; }
+  #fixed-menu:hover {
+    width: 200px;
+    height: 100%;
+    background: lightgrey;
+    background: rgba(255, 255, 255, 0.8);
+    width: 200px; }
   #fixed-menu h1, #fixed-menu ul, #fixed-menu li, #fixed-menu a {
     float: left;
     clear: both; }
@@ -251,15 +245,15 @@ h3 {
   background: rgba(255, 255, 255, 0.5);
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: opacity 500ms ease 0, visibility 0ms linear 600ms;
-  -moz-transition: opacity 500ms ease 0, visibility 0ms linear 600ms;
-  transition: opacity 500ms ease 0, visibility 0ms linear 600ms; }
+  -webkit-transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms;
+  -moz-transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms;
+  transition: background 500ms ease, width 500ms ease, height 500ms ease, opacity 500ms ease 0, visibility 0ms linear 600ms; }
   #info.show {
     opacity: 1;
     visibility: visible;
-    -webkit-transition: visibility 0ms linear, opacity 500ms ease 10ms;
-    -moz-transition: visibility 0ms linear, opacity 500ms ease 10ms;
-    transition: visibility 0ms linear, opacity 500ms ease 10ms; }
+    -webkit-transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms;
+    -moz-transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms;
+    transition: background 500ms ease, width 500ms ease, height 500ms ease, visibility 0ms linear, opacity 500ms ease 10ms; }
   #info h1, #info h2 {
     float: left;
     font-size: 20px; }

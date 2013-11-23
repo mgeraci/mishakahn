@@ -13,12 +13,12 @@
 	@if $direction == hide
 		opacity: 0
 		visibility: hidden
-		@include transition(opacity #{$time}ms ease $delay, visibility 0ms linear #{$time + $delay + 100}ms)
+		@include transition(background #{$time}ms ease, width #{$time}ms ease, height #{$time}ms ease, opacity #{$time}ms ease $delay, visibility 0ms linear #{$time + $delay + 100}ms)
 
 	@if $direction == show
 		opacity: 1
 		visibility: visible
-		@include transition(visibility 0ms linear, opacity #{$time}ms ease #{$delay + 10}ms)
+		@include transition(background #{$time}ms ease, width #{$time}ms ease, height #{$time}ms ease, visibility 0ms linear, opacity #{$time}ms ease #{$delay + 10}ms)
 
 =stack
 	float: left

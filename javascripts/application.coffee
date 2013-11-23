@@ -48,7 +48,6 @@ clickNavigation = {
 	homeY: 0
 
 	initialize: ->
-		@getTransitionTime()
 		@getHomeCenterCoords()
 
 		$("body").on "click", "ul.work-links a", (e)=>
@@ -56,15 +55,6 @@ clickNavigation = {
 
 		$("body").on "click", ".return-home", (e)=>
 			@returnHome()
-
-	getTransitionTime: ->
-		# get the transition time from the css
-		transitionTime = $("#transition-time").css("transition").split(" ")[1]
-
-		@transitionTime = if transitionTime.match(/ms$/)
-			parseInt(trantisionTime.replace(/ms$/, ""), 10)
-		else
-			parseFloat(transitionTime.replace(/s$/, ""), 10) * 1000
 
 	getHomeCenterCoords: ->
 		position = $("#home").position()
@@ -171,7 +161,7 @@ pan = {
 		if $("#stage").hasClass("momentum")
 			clearTimeout(@momentumTimeout)
 
-			currentPos = @matrixToArray($("#stage"))
+			currentPos = @getTranslation($("#stage"))
 			$("#stage").removeClass("momentum")
 				.transform "translate(#{currentPos[0]}px, #{currentPos[1]}px"
 
@@ -218,7 +208,7 @@ pan = {
 		deltaX = deltaX * -1 if xTravel < 0
 		deltaY = slope * deltaX
 
-		currentPos = @matrixToArray($("#stage"))
+		currentPos = @getTranslation($("#stage"))
 		newX = currentPos[0] + deltaX
 		newY = currentPos[1] - deltaY
 		maxxedCoords = @panMax(newX, newY)
@@ -236,7 +226,7 @@ pan = {
 	# css translation
 	mouseMove: (e)->
 		return unless $("#stage").hasClass "panning"
-		currentPos = @matrixToArray($("#stage"))
+		currentPos = @getTranslation($("#stage"))
 
 		if @prevX? && @prevY? && @prevX != false && @prevY != false
 			deltaX = e.pageX - @prevX
@@ -260,10 +250,11 @@ pan = {
 		@setTimer()
 
 	# get [x, y] coordinates from a css3 translation
-	matrixToArray: (el)->
-		matrix = el.css("-webkit-transform")
-		res = matrix.substr(7, matrix.length - 8).split(', ')
-		[parseInt(res[4], 10), parseInt(res[5], 10)]
+	getTranslation: (el)->
+		numbers = el.css("transform").replace(/.+\(/, "").replace(/\)(.+)?/, "")
+		numbersArray = numbers.split(",")
+
+		[parseFloat(numbersArray[0], 10), parseFloat(numbersArray[1], 10)]
 
 	calculateMaxes: ->
 		homePosition = $("#home").position()

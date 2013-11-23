@@ -148,37 +148,34 @@ $menu-padding: $gutter / 2
 	// unless stated here explicitely, with !important.
 	-moz-box-sizing: border-box !important
 
+	position: relative
+	overflow: hidden
+
 	float: left
 	position: fixed
 	top: 0
 	left: 0
-	width: $menu-width
-	height: 100%
+
+	width: 100px
+	height: 47px
+	padding: $menu-padding
+	background: $white
+	background: transparentize($white, 0.5)
+	box-shadow: 0 2px 5px transparentize(black, 0.8)
+	color: #000
 
 	+fade-and-hide(hide, 500)
 
 	&.show
 		+fade-and-hide(show, 500)
 
-	.content-wrapper
-		position: relative
-		overflow: hidden
-		float: left
-		width: 100px
-		height: 47px
-		padding: $menu-padding
-		+transition(all 0.2s linear)
+	&:hover
+		width: $menu-width
+		height: 100%
 
-		background: $white
-		background: transparentize($white, 0.5)
-		box-shadow: 0 2px 5px transparentize(black, 0.8)
-		color: #000
-
-		&:hover
-			background: lightgray
-			background: transparentize($white, 0.2)
-			width: $menu-width
-			height: 100%
+		background: lightgray
+		background: transparentize($white, 0.2)
+		width: $menu-width
 
 	h1, ul, li, a
 		+stack
