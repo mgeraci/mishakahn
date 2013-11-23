@@ -119,12 +119,17 @@ h3 {
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, blue), color-stop(100%, orange));
   background-image: -webkit-linear-gradient(blue, orange);
   background-image: linear-gradient(blue, orange);
-  cursor: move; }
+  cursor: move;
+  -webkit-transform: translateZ(0); }
   #stage.animating {
     cursor: default;
     -webkit-transition: all 1200ms linear;
     -moz-transition: all 1200ms linear;
     transition: all 1200ms linear; }
+  #stage.momentum {
+    -webkit-transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1);
+    -moz-transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1); }
   #stage img {
     cursor: default; }
 

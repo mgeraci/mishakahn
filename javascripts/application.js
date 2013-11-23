@@ -129,6 +129,7 @@
     endCoords: {},
     movementDuration: 0,
     movementDurationTimeout: null,
+    momentumTimeout: null,
     padding: 20,
     minX: 0,
     maxX: 0,
@@ -147,8 +148,14 @@
       });
     },
     mouseDown: function(e) {
+      var currentPos;
       if ($("#stage").hasClass("animating") || $(e.target).closest("#home").length || $(e.target).closest("a").length || $(e.target).closest("img").length || $(e.target).closest("#fixed-menu").length) {
         return;
+      }
+      if ($("#stage").hasClass("momentum")) {
+        clearTimeout(this.momentumTimeout);
+        currentPos = this.matrixToArray($("#stage"));
+        $("#stage").removeClass("momentum").transform("translate(" + currentPos[0] + "px, " + currentPos[1] + "px");
       }
       $("#stage").stop(true).addClass("panning");
       this.prevX = false;
@@ -159,7 +166,7 @@
       return this.setTimer();
     },
     mouseUp: function(e) {
-      var deltaX, deltaY, distance, distanceTraveled, maxDistance, maxSpeed, maxxedCoords, newX, newY, pos, slope, speed, xTravel, yTravel;
+      var currentPos, deltaX, deltaY, distance, distanceTraveled, maxDistance, maxSpeed, maxxedCoords, newX, newY, slope, speed, xTravel, yTravel;
       if ($(e.target).closest("#home").length || $("#stage").hasClass("animating")) {
         return;
       }
@@ -183,21 +190,17 @@
         deltaX = deltaX * -1;
       }
       deltaY = slope * deltaX;
-      pos = $("#stage").position();
-      newX = pos.left + deltaX;
-      newY = pos.top - deltaY;
-      return maxxedCoords = this.panMax(newX, newY);
+      currentPos = this.matrixToArray($("#stage"));
+      newX = currentPos[0] + deltaX;
+      newY = currentPos[1] - deltaY;
+      maxxedCoords = this.panMax(newX, newY);
+      if (speed > 2200) {
+        $("#stage").addClass("momentum").transform("translate(" + maxxedCoords[0] + "px, " + maxxedCoords[1] + "px");
+        return this.momentumTimeout = setTimeout(function() {
+          return $("#stage").removeClass("momentum");
+        }, 1000);
+      }
     },
-    /*
-    	  if speed > 700
-    	    $("#stage").addClass("momentum").animate({
-    	      top: maxxedCoords[1]
-    	      left: maxxedCoords[0]
-    	    }, 1000, "easeOutQuint", ->
-    	      $("#stage").removeClass("momentum")
-    	    )
-    */
-
     mouseMove: function(e) {
       var currentPos, deltaX, deltaY, maxxedCoords, newX, newY;
       if (!$("#stage").hasClass("panning")) {

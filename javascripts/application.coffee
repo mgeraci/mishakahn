@@ -142,6 +142,7 @@ pan = {
 	# track the length of the pan motion
 	movementDuration: 0
 	movementDurationTimeout: null
+	momentumTimeout: null
 
 	# keep the user from panning out of the field.
 	# variables set in calculateMaxes().
@@ -163,69 +164,75 @@ pan = {
 
 	# on mousedown, store click coords
 	mouseDown: (e)->
-	  return if $("#stage").hasClass("animating") ||
-	    $(e.target).closest("#home").length ||
-	    $(e.target).closest("a").length ||
-	    $(e.target).closest("img").length ||
-	    $(e.target).closest("#fixed-menu").length
+		return if $("#stage").hasClass("animating") ||
+			$(e.target).closest("#home").length ||
+			$(e.target).closest("a").length ||
+			$(e.target).closest("img").length ||
+			$(e.target).closest("#fixed-menu").length
 
-	  $("#stage").stop(true).addClass "panning"
+		# kill momentum if it's happening
+		if $("#stage").hasClass("momentum")
+			clearTimeout(@momentumTimeout)
 
-	  # reset drag coordinates
-	  @prevX = false
-	  @prevY = false
+			currentPos = @matrixToArray($("#stage"))
+			$("#stage").removeClass("momentum")
+				.transform "translate(#{currentPos[0]}px, #{currentPos[1]}px"
 
-	  # set click coordinates
-	  @startCoords.x = e.pageX
-	  @startCoords.y = e.pageY
+		$("#stage").stop(true).addClass "panning"
 
-	  # start click timer
-	  @movementDuration = 0
-	  @setTimer()
+		# reset drag coordinates
+		@prevX = false
+		@prevY = false
+
+		# set click coordinates
+		@startCoords.x = e.pageX
+		@startCoords.y = e.pageY
+
+		# start click timer
+		@movementDuration = 0
+		@setTimer()
 
 	# on mouseup, animate momentum
 	mouseUp: (e)->
-	  return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
-	  return unless $("#stage").hasClass "panning"
-	  $("#stage").removeClass "panning"
+		return if $(e.target).closest("#home").length || $("#stage").hasClass "animating"
+		return unless $("#stage").hasClass "panning"
+		$("#stage").removeClass "panning"
 
-	  # animate momentum on release
-	  clearTimeout @movementDurationTimeout
+		# animate momentum on release
+		clearTimeout @movementDurationTimeout
 
-	  @endCoords.x = e.pageX
-	  @endCoords.y = e.pageY
+		@endCoords.x = e.pageX
+		@endCoords.y = e.pageY
 
-	  xTravel = @endCoords.x - @startCoords.x
-	  yTravel = (@endCoords.y - @startCoords.y) * -1 # invert y to convert from screen position to math
+		xTravel = @endCoords.x - @startCoords.x
+		yTravel = (@endCoords.y - @startCoords.y) * -1 # invert y to convert from screen position to math
 
-	  slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
+		slope = if xTravel == 0 then 100 else yTravel / xTravel # arbitrary large number instead of ∞
 
-	  distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
-	  speed = ((distanceTraveled / @movementDuration) * 1000) || 0 # in pixels per second
+		distanceTraveled = Math.sqrt(xTravel * xTravel + yTravel * yTravel)
+		speed = ((distanceTraveled / @movementDuration) * 1000) || 0 # in pixels per second
 
-	  # range of speed is roughly 0-20000. convert to a reasonable range
-	  maxSpeed = 20000
-	  maxDistance = 800
-	  distance = (speed * maxDistance) / maxSpeed
+		# range of speed is roughly 0-20k. convert to a reasonable range
+		maxSpeed = 20000
+		maxDistance = 800
+		distance = (speed * maxDistance) / maxSpeed
 
-	  deltaX = distance / (Math.sqrt(slope * slope + 1))
-	  deltaX = deltaX * -1 if xTravel < 0
-	  deltaY = slope * deltaX
+		deltaX = distance / (Math.sqrt(slope * slope + 1))
+		deltaX = deltaX * -1 if xTravel < 0
+		deltaY = slope * deltaX
 
-	  pos = $("#stage").position()
-	  newX = pos.left + deltaX
-	  newY = pos.top - deltaY
-	  maxxedCoords = @panMax(newX, newY)
+		currentPos = @matrixToArray($("#stage"))
+		newX = currentPos[0] + deltaX
+		newY = currentPos[1] - deltaY
+		maxxedCoords = @panMax(newX, newY)
 
-		###
-	  if speed > 700
-	    $("#stage").addClass("momentum").animate({
-	      top: maxxedCoords[1]
-	      left: maxxedCoords[0]
-	    }, 1000, "easeOutQuint", ->
-	      $("#stage").removeClass("momentum")
-	    )
-		###
+		if speed > 2200
+			$("#stage").addClass("momentum")
+				.transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
+
+			@momentumTimeout = setTimeout(->
+				$("#stage").removeClass("momentum")
+			, 1000)
 
 	# on mousemove, pan the canvas. track the mouse's position across the
 	# viewport to get the x and y deltas, then apply that to the current
@@ -242,7 +249,6 @@ pan = {
 			maxxedCoords = @panMax(newX, newY)
 
 			$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
-			#$("#stage").transform "translate(#{newX}px, #{newY}px"
 
 		@prevX = e.pageX
 		@prevY = e.pageY
