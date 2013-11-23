@@ -36,6 +36,7 @@ resizeFunction = ->
 	$("#zoom-wrapper").transformOrigin "#{width / 2}px #{height / 2}px"
 
 	clickNavigation.getHomeCenterCoords()
+	pan.calculateMaxes()
 
 
 # Click-based navigation
@@ -132,13 +133,23 @@ clickNavigation = {
 ################################################################################
 
 pan = {
-	# variables
+	# calculate pan and delta
 	prevX: false
 	prevY: false
 	startCoords: {}
 	endCoords: {}
+
+	# track the length of the pan motion
 	movementDuration: 0
 	movementDurationTimeout: null
+
+	# keep the user from panning out of the field.
+	# variables set in calculateMaxes().
+	padding: 20
+	minX: 0
+	maxX: 0
+	minY: 0
+	maxY: 0
 
 	initialize: ->
 		$("body").on "mousedown", (e)=>
@@ -229,11 +240,9 @@ pan = {
 			newX = currentPos[0] + deltaX
 			newY = currentPos[1] + deltaY
 			maxxedCoords = @panMax(newX, newY)
-			#console.log deltaX, deltaY, newX, newY
-			console.log currentPos, newX, newY
 
-			#$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
-			$("#stage").transform "translate(#{newX}px, #{newY}px"
+			$("#stage").transform "translate(#{maxxedCoords[0]}px, #{maxxedCoords[1]}px"
+			#$("#stage").transform "translate(#{newX}px, #{newY}px"
 
 		@prevX = e.pageX
 		@prevY = e.pageY
@@ -253,20 +262,27 @@ pan = {
 		res = matrix.substr(7, matrix.length - 8).split(', ')
 		[parseInt(res[4], 10), parseInt(res[5], 10)]
 
+	calculateMaxes: ->
+		homePosition = $("#home").position()
+		homeWidth = $("#home").width()
+		homeHeight = $("#home").height()
+		stageWidth = $("#stage").width()
+		stageHeight = $("#stage").height()
+
+		@maxX = homePosition.left + @padding
+		@maxY = homePosition.top + @padding
+
+		@minX = (stageWidth - homePosition.left - homeWidth - @padding) * -1
+		@minY = (stageHeight - homePosition.top - homeHeight - @padding) * -1
+
 	# do not allow a coord to go too far outside of the stage
-	panMax: (newX, newY)->
-		# a little padding to show around the edges
-		padding = 20
-		maxX = ($("#stage").width() - $(window).width()) * -1 - padding
-		maxY = ($("#stage").height() - $(window).height()) * -1 - padding
+	panMax: (x, y)->
+		x = @minX if x < @minX
+		y = @minY if y < @minY
+		x = @maxX if x > @maxX
+		y = @maxY if y > @maxY
 
-		# keep from panning out of the boundaries
-		newX = padding if newX > padding # left
-		newY = padding if newY > padding # top
-		newX = maxX if newX < maxX # right
-		newY = maxY if newY < maxY # bottom
-
-		[newX, newY]
+		[x, y]
 }
 
 

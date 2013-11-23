@@ -35,7 +35,8 @@
     $("#home").outerWidth(width);
     $("#home").outerHeight(height);
     $("#zoom-wrapper").transformOrigin("" + (width / 2) + "px " + (height / 2) + "px");
-    return clickNavigation.getHomeCenterCoords();
+    clickNavigation.getHomeCenterCoords();
+    return pan.calculateMaxes();
   };
 
   clickNavigation = {
@@ -128,6 +129,11 @@
     endCoords: {},
     movementDuration: 0,
     movementDurationTimeout: null,
+    padding: 20,
+    minX: 0,
+    maxX: 0,
+    minY: 0,
+    maxY: 0,
     initialize: function() {
       var _this = this;
       $("body").on("mousedown", function(e) {
@@ -204,8 +210,7 @@
         newX = currentPos[0] + deltaX;
         newY = currentPos[1] + deltaY;
         maxxedCoords = this.panMax(newX, newY);
-        console.log(currentPos, newX, newY);
-        $("#stage").transform("translate(" + newX + "px, " + newY + "px");
+        $("#stage").transform("translate(" + maxxedCoords[0] + "px, " + maxxedCoords[1] + "px");
       }
       this.prevX = e.pageX;
       return this.prevY = e.pageY;
@@ -223,24 +228,32 @@
       res = matrix.substr(7, matrix.length - 8).split(', ');
       return [parseInt(res[4], 10), parseInt(res[5], 10)];
     },
-    panMax: function(newX, newY) {
-      var maxX, maxY, padding;
-      padding = 20;
-      maxX = ($("#stage").width() - $(window).width()) * -1 - padding;
-      maxY = ($("#stage").height() - $(window).height()) * -1 - padding;
-      if (newX > padding) {
-        newX = padding;
+    calculateMaxes: function() {
+      var homeHeight, homePosition, homeWidth, stageHeight, stageWidth;
+      homePosition = $("#home").position();
+      homeWidth = $("#home").width();
+      homeHeight = $("#home").height();
+      stageWidth = $("#stage").width();
+      stageHeight = $("#stage").height();
+      this.maxX = homePosition.left + this.padding;
+      this.maxY = homePosition.top + this.padding;
+      this.minX = (stageWidth - homePosition.left - homeWidth - this.padding) * -1;
+      return this.minY = (stageHeight - homePosition.top - homeHeight - this.padding) * -1;
+    },
+    panMax: function(x, y) {
+      if (x < this.minX) {
+        x = this.minX;
       }
-      if (newY > padding) {
-        newY = padding;
+      if (y < this.minY) {
+        y = this.minY;
       }
-      if (newX < maxX) {
-        newX = maxX;
+      if (x > this.maxX) {
+        x = this.maxX;
       }
-      if (newY < maxY) {
-        newY = maxY;
+      if (y > this.maxY) {
+        y = this.maxY;
       }
-      return [newX, newY];
+      return [x, y];
     }
   };
 
