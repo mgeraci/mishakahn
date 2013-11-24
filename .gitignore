@@ -1,4 +1,5 @@
 .sass-cache/**/*
+stylesheets/.sass-cache/
 .DS_Store
 .swp
 stylsheets/.sass-cache/
