@@ -1,39 +1,9 @@
 $white: #fff
 
 $gutter: 24px
-$duration: 2s
+$transition-time: 1200ms
 
 $home-x: 3000px
 $home-y: 3000px
 $stage-width: 10000px
 $stage-height: 10000px
-
-=stack
-  float: left
-  clear: both
-
-=stackwide
-  +stack
-  width: 100%
-
-=transition($args)
-  -webkit-transition: $args
-  -moz-transition: $args
-  transition: $args
-
-=transition3($args1, $args2, $args3)
-  -webkit-transition: $args1, $args2, $args3
-  -moz-transition: $args1, $args2, $args3
-  transition: $args1, $args2, $args3
-
-=transform($args)
-  -webkit-transform: $args
-  -moz-transform: $args
-  transform: $args
-
-=transform-origin($args)
-  -webkit-transform-origin: $args
-  -moz-transform-origin: $args
-  -ms-transform-origin: $args
-  -o-transform-origin: $args
-  transform-origin: $args

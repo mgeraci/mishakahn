@@ -1,205 +1,227 @@
 @import reset
-@import gradient
+@import bourbon/bourbon
+@import bourbon/addons/_timing-functions
+@import mixins
 @import variables
 
 *
-  -webkit-box-sizing: border-boz
-  -moz-box-sizing: border-boz
-  box-sizing: border-box
+	+box-sizing(border-box)
 
 body
-  font-stye: oblique !important
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif
-  font-size: 16px
-  background: lightgray
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif
+	font-size: 16px
+	background: lightgray
 
 a
-  color: gray
-  text-decoration: none
+	color: gray
+	text-decoration: none
 
-  &:hover
-    color: black
+	&:hover
+		color: black
 
 h1, h2, h3, h4
-  font-weight: bold
+	font-weight: bold
 
 h1
-  font-size: 24px
-  margin-bottom: $gutter
+	font-size: 24px
+	margin-bottom: $gutter
 
 h2
-  font-size: 20px
+	font-size: 20px
 
 h3
-  font-size: 18px
+	font-size: 18px
 
 =floating-element
-  box-shadow: 0 5px 10px transparentize(black, 0.8)
+	box-shadow: 0 5px 10px transparentize(black, 0.8)
 
 //////////////////////////////
 
 #viewport
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  overflow: hidden
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	overflow: hidden
+
+// a hidden div to pass the transition time to js
+#transition-time
+	+transition(all $transition-time ease-in)
+
+// zoom effect is separate from translation
+#zoom-wrapper
+	+transition(all $transition-time / 2 ease-in)
+
+	&.zoomed-out
+		+transition(all $transition-time / 2 ease-out)
+		+transform(scale(0.6))
 
 // positioned to show #home at the beginning
 #stage
-  position: absolute
-  top: $home-y * -1
-  left: $home-x * -1
-  width: $stage-width
-  height: $stage-height
-  +gradient(blue, orange)
-  cursor: move
+	position: absolute
+	top: $home-y * -1
+	left: $home-x * -1
+	+transform(translate(0, 0))
+	width: $stage-width
+	height: $stage-height
+	+linear-gradient(blue, orange)
+	cursor: move
+	-webkit-transform: translateZ(0)
 
-  &.animating
-    cursor: default
-    +transition(all $duration ease-in-out)
+	&.animating
+		cursor: default
+		+transition(all $transition-time linear)
 
-  &.zoomed-out
-    +transform(scale(0.15))
+	&.momentum
+		+transition(all 1000ms $ease-out-quint)
 
-  img
-    cursor: default
+	img
+		cursor: default
 
 .test
-  position: absolute
-  +floating-element
+	position: absolute
+	+floating-element
 
-  &#test1
-    top: 2277px
-    left: 3040px
+	&#test1
+		top: 2277px
+		left: 3040px
 
-  &#test2
-    top: 4487px
-    left: 4040px
+	&#test2
+		top: 4487px
+		left: 4040px
 
-  &#test3
-    top: 8007px
-    left: 980px
+	&#test3
+		top: 8007px
+		left: 980px
 
-  &#test4
-    top: 3407px
-    left: 2060px
+	&#test4
+		top: 3407px
+		left: 2060px
 
-  &#test5
-    top: 2117px
-    left: 4890px
+	&#test5
+		top: 2117px
+		left: 4890px
 
 #home
-  position: absolute
-  top: $home-y
-  left: $home-x
-  overflow-x: hidden
-  overflow-y: auto
-  +stack
-  padding: $gutter
-  background: $white
-  +floating-element
-  cursor: default
+	position: absolute
+	top: $home-y
+	left: $home-x
+	overflow-x: hidden
+	overflow-y: auto
+	+stack
+	padding: $gutter
+	background: $white
+	+floating-element
+	cursor: default
 
-  ul
-    float: left
+	ul
+		float: left
 
-  li
-    +stackwide
-    margin-top: $gutter / 3
+	li
+		+stackwide
+		margin-top: $gutter / 3
 
-  img
-    float: left
-    margin-left: $gutter * 2
+	img
+		float: left
+		margin-left: $gutter * 2
 
-  a
-    cursor: pointer
+	a
+		cursor: pointer
 
-  .return-home
-    display: none
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    +transition(box-shadow 0.2s linear)
+	.return-home
+		display: none
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+		+transition(box-shadow 0.2s linear)
 
-    &:hover
-      box-shadow: 0 0 20px rgba(0,0,0,0.6)
+		&:hover
+			box-shadow: 0 0 20px rgba(0,0,0,0.6)
 
 $menu-width: 200px
 $menu-padding: $gutter / 2
 #fixed-menu
-  // don't know why, but firefox doesn't get border-box on this element
-  // unless stated here explicitely, with !important.
-  -moz-box-sizing: border-box !important
+	// don't know why, but firefox doesn't get border-box on this element
+	// unless stated here explicitely, with !important.
+	-moz-box-sizing: border-box !important
 
-  display: none
-  position: fixed
-  overflow: hidden
-  top: 0
-  left: 0
+	position: relative
+	overflow: hidden
 
-  float: left
-  width: 100px
-  height: 47px
-  padding: $menu-padding
+	float: left
+	position: fixed
+	top: 0
+	left: 0
 
-  background: $white
-  background: transparentize($white, 0.5)
-  box-shadow: 0 2px 5px transparentize(black, 0.8)
-  +transition(all 0.2s linear)
-  color: #000
+	width: 100px
+	height: 47px
+	padding: $menu-padding
+	background: $white
+	background: transparentize($white, 0.5)
+	box-shadow: 0 2px 5px transparentize(black, 0.8)
+	color: #000
 
-  &:hover
-    background: lightgray
-    background: transparentize($white, 0.2)
-    width: $menu-width
-    height: 100%
+	+fade-and-hide(hide, 500)
 
-  h1, ul, li, a
-    +stack
+	&.show
+		+fade-and-hide(show, 500)
 
-  h1
-    text-transform: uppercase
-    margin: 0
+	&:hover
+		width: $menu-width
+		height: 100%
 
-  ul
-    width: $menu-width - $menu-padding * 2
-    margin:
-      top: $gutter / 2
+		background: lightgray
+		background: transparentize($white, 0.2)
+		width: $menu-width
 
-  a
-    margin:
-      top: $gutter / 2
+	h1, ul, li, a
+		+stack
+
+	h1
+		text-transform: uppercase
+		margin: 0
+
+	ul
+		width: $menu-width - $menu-padding * 2
+		margin:
+			top: $gutter / 2
+
+	a
+		margin:
+			top: $gutter / 2
 
 #info
-  display: block
-  position: fixed
-  top: 0
-  right: 0
-  display: none
-  padding: $gutter
-  max-width: 300px
-  box-shadow: 0 2px 5px transparentize(black, 0.8)
-  background: lightgray
+	display: block
+	position: fixed
+	top: 0
+	right: 0
+	padding: $gutter
+	max-width: 300px
+	box-shadow: 0 2px 5px transparentize(black, 0.8)
+	background: $white
+	background: transparentize($white, 0.5)
 
-  h1, h2
-    float: left
-    font-size: 20px
+	+fade-and-hide(hide, 500)
 
-  h1
+	&.show
+		+fade-and-hide(show, 500)
 
-  h2
-    margin:
-      left: $gutter / 2
-    color: gray
-    font-style: oblique
-    font-weight: normal
+	h1, h2
+		float: left
+		font-size: 20px
 
-  .text
-    +stackwide
-    font-size: 16px
-    line-height: 20px
-    color: gray
+	h2
+		margin:
+			left: $gutter / 2
+		color: #444
+		font-style: oblique
+		font-weight: normal
+
+	.text
+		+stackwide
+		font-size: 16px
+		line-height: 20px
+		color: #444

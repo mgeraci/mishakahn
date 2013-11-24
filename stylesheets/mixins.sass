@@ -1,0 +1,32 @@
+=center($width)
+	width: $width
+	position: relative
+	left: 50%
+	margin:
+		left: $width / 2 * -1
+
+// fade in/out an element then toggle its visibility
+// - direction: hide or show
+// - time: transition time in ms
+// - delay (optional): how long before the transition kicks in
+=fade-and-hide($direction, $time, $delay: 0)
+	@if $direction == hide
+		opacity: 0
+		visibility: hidden
+		@include transition(background #{$time}ms ease, width #{$time}ms ease, height #{$time}ms ease, opacity #{$time}ms ease $delay, visibility 0ms linear #{$time + $delay + 100}ms)
+
+	@if $direction == show
+		opacity: 1
+		visibility: visible
+		@include transition(background #{$time}ms ease, width #{$time}ms ease, height #{$time}ms ease, visibility 0ms linear, opacity #{$time}ms ease #{$delay + 10}ms)
+
+=stack
+	float: left
+	clear: both
+
+=stackwide
+	+stack
+	width: 100%
+
+.hidden
+	display: none
