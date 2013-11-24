@@ -251,10 +251,18 @@ pan = {
 
 	# get [x, y] coordinates from a css3 translation
 	getTranslation: (el)->
-		numbers = el.css("transform").replace(/.+\(/, "").replace(/\)(.+)?/, "")
-		numbersArray = numbers.split(",")
+		matrix = el.css("-webkit-transform") ||
+			el.css("-moz-transform")           ||
+			el.css("-ms-transform")            ||
+			el.css("-o-transform")             ||
+			el.css("transform")
 
-		[parseFloat(numbersArray[0], 10), parseFloat(numbersArray[1], 10)]
+		if matrix != 'none'
+			matrix = matrix.replace(/.+\(/, "").replace(/\)(.+)?/, "").split(",")
+
+			return [parseFloat(matrix[4], 10), parseFloat(matrix[5], 10)]
+		else
+			return false
 
 	calculateMaxes: ->
 		homePosition = $("#home").position()

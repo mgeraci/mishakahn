@@ -210,10 +210,14 @@
       return this.setTimer();
     },
     getTranslation: function(el) {
-      var numbers, numbersArray;
-      numbers = el.css("transform").replace(/.+\(/, "").replace(/\)(.+)?/, "");
-      numbersArray = numbers.split(",");
-      return [parseFloat(numbersArray[0], 10), parseFloat(numbersArray[1], 10)];
+      var matrix;
+      matrix = el.css("-webkit-transform") || el.css("-moz-transform") || el.css("-ms-transform") || el.css("-o-transform") || el.css("transform");
+      if (matrix !== 'none') {
+        matrix = matrix.replace(/.+\(/, "").replace(/\)(.+)?/, "").split(",");
+        return [parseFloat(matrix[4], 10), parseFloat(matrix[5], 10)];
+      } else {
+        return false;
+      }
     },
     calculateMaxes: function() {
       var homeHeight, homePosition, homeWidth, stageHeight, stageWidth;
