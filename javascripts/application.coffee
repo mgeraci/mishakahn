@@ -1,9 +1,13 @@
 $ ->
 	copyHomeMenu()
 	setSizeAndResize()
-	clickNavigation.initialize()
-	pan.initialize()
 	hovercards.initialize()
+
+	if $("html").hasClass("csstransforms") && $("html").hasClass("csstransitions")
+		clickNavigation.initialize()
+		pan.initialize()
+	else
+		noCSS3Navigation.initialize()
 
 
 # Setup
@@ -288,7 +292,56 @@ pan = {
 }
 
 
+# Navigation for browsers without css3 transition support
+################################################################################
+
+noCSS3Navigation = {
+	initialize: ->
+		$("body").on "click", "ul.work-links a", (e)=>
+			@goToPiece(e)
+
+		$("body").on "click", ".return-home", (e)=>
+			@returnHome()
+
+	goToPiece: (e)->
+		e.preventDefault()
+
+		target = $("##{$(e.target).data "target"}")
+		@moveToElement target
+
+		# block action on the home page
+		$("#home .return-home").show()
+
+	returnHome: ->
+		$("#home .return-home").hide()
+		@moveToElement $("#home")
+
+	moveToElement: (target)->
+		goingHome = target.attr("id") == "home"
+		targetPosition = target.position()
+		targetWidth = target.outerWidth()
+		targetHeight = target.outerHeight()
+		viewportWidth = $(window).width()
+		viewportHeight = $(window).height()
+
+		stageTop = targetPosition.top * -1 + (viewportHeight - targetHeight) / 2
+		stageLeft = targetPosition.left * -1 + (viewportWidth - targetWidth) / 2
+
+		$("#stage").css
+			top: stageTop
+			left: stageLeft
+
+		menu = $("#fixed-menu")
+		if goingHome
+			menu.removeClass("show")
+		else
+			menu.addClass("show")
+}
+
+
 # hover on a piece to show info in a hovercard
+################################################################################
+#
 hovercards = {
 	initialize: ->
 		$("body").on "mouseenter", ".test", (e)=>
